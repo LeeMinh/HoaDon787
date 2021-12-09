@@ -1,0 +1,35 @@
+﻿@model List<AirlineInvoice.Models.TransactionRoomCustomer>
+<h2>Danh sách khách nghỉ</h2>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Số phòng</th>
+            <th>Giờ vào</th>
+            <th>Họ tên</th>
+            <th>CMTND</th>
+            <th>Điện thoại</th>
+        </tr>
+    </thead>
+    <tbody id="tblRoom">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr id="room-@item.ID">
+                <td>@item.RoomCode</td>
+                <td align="center">@string.Format("{0:yyyy-MM-dd HH:mm}", item.RestTime)</td>
+                <td><a href="javascript:void(0);" onclick="ShowTransactionRoomCustomer('@AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionRoomID)');" class="btn btn-xs btn-info fa fa-edit">&nbsp;Xem</a></td>
+                <td>@item.CustomerName</td>
+                <td>@item.IdentityNumber</td>
+                <td>@item.Phone</td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>

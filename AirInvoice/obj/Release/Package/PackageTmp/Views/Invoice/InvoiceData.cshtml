@@ -1,0 +1,114 @@
+﻿@model List<AirlineInvoice.Models.Invoice>
+<table class="table table-bordered table-striped" id="tblPq">
+    <thead>
+        <tr>
+            <th>Mã</th>
+            <th>Số HĐ</th>
+            <th>Tổng tiền</th>
+            <th>Chi nhánh</th>
+            <th>Loại</th>
+            <th>Khách</th>
+            <th>Người tạo</th>
+            <th>Ngày</th>
+            <th>TT</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tblInvoice">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td align="center">@item.InvoiceID</td>
+                <td>
+                    @{ if (item.EInvoiceNumber != "0" && item.EInvoiceNumber != "" && item.EInvoiceNumber != null)
+                        {
+                            if (item.ENumber != "0" && item.ENumber != "" && item.ENumber != null)
+                            {
+                                <span style="color:@(item.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Exported ? "#0094ff" : "")"> @item.ENumber </span>
+                            }
+                            else {<a class="btnAction btnActionEditENumber btnEdit" data-toggle="modal" data-invoiceid="@item.InvoiceID" data-target="#UpdateEInvoice"></a> }
+                        }
+                        else
+                        { <span style="color:@(item.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Exported ? "#0094ff" : "")"> @item.InvoiceNumber </span> }
+                        }
+                </td>
+                <td>@string.Format("{0:#,#}", item.Total)</td>
+                <td>@item.BranchName</td>
+                <td>
+                    @(item.InvoiceType == 1 ? "Xuất" : "Hoàn")
+                </td>
+                <td align="center">@item.CustomerName</td>
+                <td>@AirlineInvoice.Utils.CommonFunction.GetUsernameByID(item.UserCreate)</td>
+                <td align="center">@string.Format("{0:dd/MM/yyyy}", item.InvoiceDate)</td>
+                <td>
+                    @if(item.InvoiceStatus == 1)
+                    {
+                        if(item.EInvoiceNumber != "" && item.EInvoiceNumber != null) {<span>HĐĐT @item.EInvoiceNumber</span> }
+                        else { <span>Đã Xuất</span>}
+                    }
+                    else
+                    {
+                    <span>--</span>
+                    }
+                </td>
+                <td align="center">
+                    @Html.ActionLink(" ", "EditInvoice", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceID) }, new { @class = "btnAction btnEdit" })
+                </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")
+
+<div class="modal" id="UpdateEInvoice" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Cập nhật số hóa đơn điện tử</h4>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <span class="input-group-addon spEinvoiceNumber">Số hóa đơn</span>
+                    <input type="text" id="EinvoiceNumber" name="EinvoiceNumber" class="form-control" placeholder="">
+                    <input type="text" id="InvoiceID" name="InvoiceID" class="form-control hidden" readonly="">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="fa fa-check btn btn-primary" data-dismiss="modal" onclick="SubmitUpdateENumber()">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.btnActionEditENumber').click(function () {
+        $('#InvoiceID').val($(this).attr('data-invoiceid'));
+    });
+    function SubmitUpdateENumber() {
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            url: "/Invoice/UpdateEInvoiceNumber",
+            type: "post",
+            dataType: "text",
+            data: {
+                InvoiceID: $('#InvoiceID').val(),
+                Enumber: $('#EinvoiceNumber').val()
+            },
+            success: function (data) {
+            $("#Invoice-data").load(window.location.href + " #Invoice-data" , function () {                      
+              $("#squaresWaveG").hide();
+               });
+            }
+        });
+    }
+</script>

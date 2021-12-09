@@ -1,0 +1,64 @@
+﻿@model List<AirlineInvoice.Models.Room>
+@{
+    var lstHotel = (List<AirlineInvoice.Models.Hotel>)ViewBag.Hotels;
+}
+@if (Model != null)
+{
+    foreach (var item in Model.GroupBy(x => x.Floor))
+    {
+    <div class="ibox float-e-margins">
+        <div class="ibox-title">
+            <h5>@lstHotel.Where(x => x.HotelID == item.First().HotelID).Select(x => x.HotelName).FirstOrDefault() Tầng @item.First().Floor </h5>
+        </div>
+        <div class="ibox-content">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @foreach (var room in Model.Where(x => x.Floor == @item.First().Floor))
+                    {
+                        string bg = "navy-bg";
+                        string icon = "fa-check";
+                        string status = "Còn trống";
+                        if (room.Status == (int)AirlineInvoice.Utils.RoomStatus.Booked)
+                        {
+                            bg = "yellow-bg";
+                            icon = "fa-phone";
+                            status = "Đặt trước";
+                        }
+                        else if (room.Status == (int)AirlineInvoice.Utils.RoomStatus.InUse)
+                        {
+                            bg = "red-bg";
+                            icon = "fa-meh-o";
+                            status = "Đã thuê";
+                        }
+                        <div class="col-lg-3">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <div class="widget style3 @bg">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <i class="fa @icon fa-5x"></i>
+                                        </div>
+                                        <div class="col-xs-8 text-right">
+                                            <span>@status</span>
+                                            <h2 class="font-bold">@room.RoomCode</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <ul class="dropdown-menu animated fadeInRight m-t-xs context-menu" style="position:absolute;top:20px; left: 20px;"
+                                roomID="@AirlineInvoice.Utils.CommonFunction.Shrink(room.RoomID)">
+                                <li><a class="fa fa-arrow-circle-o-right" style="display: @(room.Status == (int)AirlineInvoice.Utils.RoomStatus.InUse ? "none" : "block")" 
+        href="javascript:void(0);" onclick="CheckIn("@AirlineInvoice.Utils.CommonFunction.Shrink(room.RoomID)");">&nbsp;&nbsp;Cho thuê phòng</a></li>
+                                <li><a class="fa fa-arrow-circle-o-left" href="javascript:void(0);" style="display: @(room.Status == (int)AirlineInvoice.Utils.RoomStatus.InUse ? "block" : "none")" 
+        onclick="CheckOut("@AirlineInvoice.Utils.CommonFunction.Shrink(room.RoomID)");">&nbsp;&nbsp;Trả phòng</a></li>
+                                 <li><a class="fa fa-arrow-circle-o-left" href="javascript:void(0);" style="display: @(room.Status == (int)AirlineInvoice.Utils.RoomStatus.InUse ? "block" : "none")" 
+        onclick="ChangeRoom("@AirlineInvoice.Utils.CommonFunction.Shrink(room.RoomID)");">&nbsp;&nbsp;Chuyển phòng</a></li>
+                            </ul>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+}

@@ -1,0 +1,40 @@
+﻿@model List<AirlineInvoice.Models.Customer>
+<table class="table table-striped table-bordered table-hover" id="tblPq">
+    <thead>
+        <tr>
+            <th title="Số chứng minh thư nhân dân">CMTND</th>
+            <th title="Tên khách hàng">Họ tên</th>
+            <th>Số điện thoại</th>
+            <th>Email</th>
+            <th title="Khách lẻ hay khách theo đoàn">Phân loại</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody id="tblCustomer">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.IdentityNumber</td>
+                <td>@item.FullName</td>
+                <td>@item.Phone</td>
+                <td>@item.Email</td>
+                <td>@AirlineInvoice.Utils.DataComboSource.CustomerTypeMapping[item.CustomerType]</td>
+                <td align="center">
+                    @Html.ActionLink(" ", "EditCustomer", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(item.CustomerID) }, new { @class = "btnAction btnEdit" })
+                </td>
+                <td align="center"><a href="javascript:void(0);" onclick="confirmDelete('@AirlineInvoice.Utils.CommonFunction.Shrink(item.CustomerID)')" class = "btnAction btnDelete">&nbsp;</a> </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")

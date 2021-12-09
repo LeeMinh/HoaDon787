@@ -1,0 +1,1174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="SearchFlightAuto">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Departure" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loginMode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClassMode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAutoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchFlightAutoResult" type="tns:ArrayOfFlightVN" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfFlightVN">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="FlightVN" nillable="true" type="tns:FlightVN" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FlightVN">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Index" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="AirCraft" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FltNumb" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StartPt" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EndPt" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="StartDt" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="EndDt" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Class" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumbOfSeat" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FareAdt" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="FareChd" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="FareInf" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaxAdt" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaxChd" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="TaxInf" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="FeeAdt" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="FeeChd" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="FeeInf" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PriceAdt" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PriceChd" type="s:double" />
+          <s:element minOccurs="1" maxOccurs="1" name="PriceInf" type="s:double" />
+          <s:element minOccurs="0" maxOccurs="1" name="SignIn" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Authentication" type="tns:Authentication" />
+      <s:complexType name="Authentication">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="SearchFlightAutoV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Departure" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loginMode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClassMode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAutoV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchFlightAutoV2Result" type="tns:ArrayOfFlightVN" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAutoV2FilterP">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Departure" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="loginMode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClassMode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="FilterP" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAutoV2FilterPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchFlightAutoV2FilterPResult" type="tns:ArrayOfFlightVN" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAEP">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Departure" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Destination" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureDate" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="SeatNeed" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" name="loginMode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="ClassMode" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="includeAEP" type="s:boolean" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SearchFlightAEPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchFlightAEPResult" type="tns:ArrayOfFlightVN" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckConnection">
+        <s:complexType />
+      </s:element>
+      <s:element name="CheckConnectionResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckConnectionResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullTicketNumber">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PNR" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullTicketNumberResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OpenFullTicketNumberResult" type="tns:InvoiceDetail" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="InvoiceDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="InvoiceDetailID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="TicketNo" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketType" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="TripCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketFare" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketVAT" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketTax" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketTaxGlobal" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="RealPay" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="TicketPrice" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="VCRDisplay" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UpdateSystem" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="Airline" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InvoiceID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PNRCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PaxName" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AgentID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="AgentBranchID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UpdateTime" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="SoldDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="OtherFees" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReturnFees" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChangeTicket" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ChangeLevelFee" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ChangeLevelFeeVAT" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Note" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AgentFee" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="AgentFeeVAT" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SubmitBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsRoundTrip" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListPassengers" type="tns:ArrayOfPassengerVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureFlight" type="tns:FlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="ReturnFlight" type="tns:FlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Remark" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfPassengerVN">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PassengerVN" nillable="true" type="tns:PassengerVN" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PassengerVN">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FirstName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Gender" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Birthday" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="SubmitBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitBookingResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsRoundTrip" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListPassengers" type="tns:ArrayOfPassengerVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="DepartureFlight" type="tns:FlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="ReturnFlight" type="tns:FlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Remark" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitBookingV2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OtherCommand">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListCMD" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OtherCommandResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OtherCommandResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingMulti">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsRoundTrip" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListPassengers" type="tns:ArrayOfPassengerVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListFlight" type="tns:ArrayOfFlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Remark" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingMultiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitBookingMultiResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingMultiV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IsRoundTrip" type="s:boolean" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListPassengers" type="tns:ArrayOfPassengerVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="ListFlight" type="tns:ArrayOfFlightVN" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Remark" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SubmitBookingMultiV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SubmitBookingMultiV2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IssueTicket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pnr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="icode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IssueTicketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IssueTicketResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IssueTicketCA">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pnr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TourCode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="CANumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="icode" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="IssueTicketCAResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="IssueTicketCAResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CloseReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CloseReportResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenTodayReport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenTodayReportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OpenTodayReportResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenReportByDate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="datetocheck" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenReportByDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OpenReportByDateResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VoidTicket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Pnr" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="HardcopyPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrinterAddress" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="TicketPrintRoutine" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="StationNumber" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="cmd" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VoidTicketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VoidTicketResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PNR" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OpenFullBookingResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullWPP">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PNR" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="OpenFullWPPResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="OpenFullWPPResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SILoginCheck">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SignOn" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Passcode" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="Suf" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="SILoginCheckResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SILoginCheckResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="SearchFlightAutoSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchFlightAuto" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchFlightAutoResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2SoapIn">
+    <wsdl:part name="parameters" element="tns:SearchFlightAutoV2" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2SoapOut">
+    <wsdl:part name="parameters" element="tns:SearchFlightAutoV2Response" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2Authentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2FilterPSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchFlightAutoV2FilterP" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2FilterPSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchFlightAutoV2FilterPResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAutoV2FilterPAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAEPSoapIn">
+    <wsdl:part name="parameters" element="tns:SearchFlightAEP" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAEPSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchFlightAEPResponse" />
+  </wsdl:message>
+  <wsdl:message name="SearchFlightAEPAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="CheckConnectionSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckConnection" />
+  </wsdl:message>
+  <wsdl:message name="CheckConnectionSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckConnectionResponse" />
+  </wsdl:message>
+  <wsdl:message name="CheckConnectionAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullTicketNumberSoapIn">
+    <wsdl:part name="parameters" element="tns:OpenFullTicketNumber" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullTicketNumberSoapOut">
+    <wsdl:part name="parameters" element="tns:OpenFullTicketNumberResponse" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullTicketNumberAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitBooking" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitBookingResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingV2SoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitBookingV2" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingV2SoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitBookingV2Response" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingV2Authentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OtherCommandSoapIn">
+    <wsdl:part name="parameters" element="tns:OtherCommand" />
+  </wsdl:message>
+  <wsdl:message name="OtherCommandSoapOut">
+    <wsdl:part name="parameters" element="tns:OtherCommandResponse" />
+  </wsdl:message>
+  <wsdl:message name="OtherCommandAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiSoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitBookingMulti" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiSoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitBookingMultiResponse" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiV2SoapIn">
+    <wsdl:part name="parameters" element="tns:SubmitBookingMultiV2" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiV2SoapOut">
+    <wsdl:part name="parameters" element="tns:SubmitBookingMultiV2Response" />
+  </wsdl:message>
+  <wsdl:message name="SubmitBookingMultiV2Authentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketSoapIn">
+    <wsdl:part name="parameters" element="tns:IssueTicket" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketSoapOut">
+    <wsdl:part name="parameters" element="tns:IssueTicketResponse" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketCASoapIn">
+    <wsdl:part name="parameters" element="tns:IssueTicketCA" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketCASoapOut">
+    <wsdl:part name="parameters" element="tns:IssueTicketCAResponse" />
+  </wsdl:message>
+  <wsdl:message name="IssueTicketCAAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="CloseReportSoapIn">
+    <wsdl:part name="parameters" element="tns:CloseReport" />
+  </wsdl:message>
+  <wsdl:message name="CloseReportSoapOut">
+    <wsdl:part name="parameters" element="tns:CloseReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="CloseReportAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OpenTodayReportSoapIn">
+    <wsdl:part name="parameters" element="tns:OpenTodayReport" />
+  </wsdl:message>
+  <wsdl:message name="OpenTodayReportSoapOut">
+    <wsdl:part name="parameters" element="tns:OpenTodayReportResponse" />
+  </wsdl:message>
+  <wsdl:message name="OpenTodayReportAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OpenReportByDateSoapIn">
+    <wsdl:part name="parameters" element="tns:OpenReportByDate" />
+  </wsdl:message>
+  <wsdl:message name="OpenReportByDateSoapOut">
+    <wsdl:part name="parameters" element="tns:OpenReportByDateResponse" />
+  </wsdl:message>
+  <wsdl:message name="OpenReportByDateAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="VoidTicketSoapIn">
+    <wsdl:part name="parameters" element="tns:VoidTicket" />
+  </wsdl:message>
+  <wsdl:message name="VoidTicketSoapOut">
+    <wsdl:part name="parameters" element="tns:VoidTicketResponse" />
+  </wsdl:message>
+  <wsdl:message name="VoidTicketAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:OpenFullBooking" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:OpenFullBookingResponse" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullBookingAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullWPPSoapIn">
+    <wsdl:part name="parameters" element="tns:OpenFullWPP" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullWPPSoapOut">
+    <wsdl:part name="parameters" element="tns:OpenFullWPPResponse" />
+  </wsdl:message>
+  <wsdl:message name="OpenFullWPPAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:message name="SILoginCheckSoapIn">
+    <wsdl:part name="parameters" element="tns:SILoginCheck" />
+  </wsdl:message>
+  <wsdl:message name="SILoginCheckSoapOut">
+    <wsdl:part name="parameters" element="tns:SILoginCheckResponse" />
+  </wsdl:message>
+  <wsdl:message name="SILoginCheckAuthentication">
+    <wsdl:part name="Authentication" element="tns:Authentication" />
+  </wsdl:message>
+  <wsdl:portType name="VNAWSSoap">
+    <wsdl:operation name="SearchFlightAuto">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit search flight</wsdl:documentation>
+      <wsdl:input message="tns:SearchFlightAutoSoapIn" />
+      <wsdl:output message="tns:SearchFlightAutoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit search flight no policy</wsdl:documentation>
+      <wsdl:input message="tns:SearchFlightAutoV2SoapIn" />
+      <wsdl:output message="tns:SearchFlightAutoV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2FilterP">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit search flight no policy</wsdl:documentation>
+      <wsdl:input message="tns:SearchFlightAutoV2FilterPSoapIn" />
+      <wsdl:output message="tns:SearchFlightAutoV2FilterPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAEP">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit search flight</wsdl:documentation>
+      <wsdl:input message="tns:SearchFlightAEPSoapIn" />
+      <wsdl:output message="tns:SearchFlightAEPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CheckConnection">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit search flight with specific sign in</wsdl:documentation>
+      <wsdl:input message="tns:CheckConnectionSoapIn" />
+      <wsdl:output message="tns:CheckConnectionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullTicketNumber">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Open Long Ticketing Number</wsdl:documentation>
+      <wsdl:input message="tns:OpenFullTicketNumberSoapIn" />
+      <wsdl:output message="tns:OpenFullTicketNumberSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit booking</wsdl:documentation>
+      <wsdl:input message="tns:SubmitBookingSoapIn" />
+      <wsdl:output message="tns:SubmitBookingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit booking with Email</wsdl:documentation>
+      <wsdl:input message="tns:SubmitBookingV2SoapIn" />
+      <wsdl:output message="tns:SubmitBookingV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OtherCommand">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Other Command</wsdl:documentation>
+      <wsdl:input message="tns:OtherCommandSoapIn" />
+      <wsdl:output message="tns:OtherCommandSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMulti">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit booking multi</wsdl:documentation>
+      <wsdl:input message="tns:SubmitBookingMultiSoapIn" />
+      <wsdl:output message="tns:SubmitBookingMultiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMultiV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Submit booking multi V2 with Email</wsdl:documentation>
+      <wsdl:input message="tns:SubmitBookingMultiV2SoapIn" />
+      <wsdl:output message="tns:SubmitBookingMultiV2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicket">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Issue ticket</wsdl:documentation>
+      <wsdl:input message="tns:IssueTicketSoapIn" />
+      <wsdl:output message="tns:IssueTicketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicketCA">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Issue ticket CA</wsdl:documentation>
+      <wsdl:input message="tns:IssueTicketCASoapIn" />
+      <wsdl:output message="tns:IssueTicketCASoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CloseReport">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Issue ticket</wsdl:documentation>
+      <wsdl:input message="tns:CloseReportSoapIn" />
+      <wsdl:output message="tns:CloseReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenTodayReport">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Open today report</wsdl:documentation>
+      <wsdl:input message="tns:OpenTodayReportSoapIn" />
+      <wsdl:output message="tns:OpenTodayReportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenReportByDate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Open today report</wsdl:documentation>
+      <wsdl:input message="tns:OpenReportByDateSoapIn" />
+      <wsdl:output message="tns:OpenReportByDateSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="VoidTicket">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">void ticket</wsdl:documentation>
+      <wsdl:input message="tns:VoidTicketSoapIn" />
+      <wsdl:output message="tns:VoidTicketSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Open Long Booking Code</wsdl:documentation>
+      <wsdl:input message="tns:OpenFullBookingSoapIn" />
+      <wsdl:output message="tns:OpenFullBookingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullWPP">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Open Long WPP</wsdl:documentation>
+      <wsdl:input message="tns:OpenFullWPPSoapIn" />
+      <wsdl:output message="tns:OpenFullWPPSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SILoginCheck">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">SI Checker</wsdl:documentation>
+      <wsdl:input message="tns:SILoginCheckSoapIn" />
+      <wsdl:output message="tns:SILoginCheckSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="VNAWSSoap" type="tns:VNAWSSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchFlightAuto">
+      <soap:operation soapAction="http://tempuri.org/SearchFlightAuto" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SearchFlightAutoAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2">
+      <soap:operation soapAction="http://tempuri.org/SearchFlightAutoV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SearchFlightAutoV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2FilterP">
+      <soap:operation soapAction="http://tempuri.org/SearchFlightAutoV2FilterP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SearchFlightAutoV2FilterPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAEP">
+      <soap:operation soapAction="http://tempuri.org/SearchFlightAEP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SearchFlightAEPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckConnection">
+      <soap:operation soapAction="http://tempuri.org/CheckConnection" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CheckConnectionAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullTicketNumber">
+      <soap:operation soapAction="http://tempuri.org/OpenFullTicketNumber" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OpenFullTicketNumberAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBooking">
+      <soap:operation soapAction="http://tempuri.org/SubmitBooking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitBookingAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingV2">
+      <soap:operation soapAction="http://tempuri.org/SubmitBookingV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitBookingV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OtherCommand">
+      <soap:operation soapAction="http://tempuri.org/OtherCommand" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OtherCommandAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMulti">
+      <soap:operation soapAction="http://tempuri.org/SubmitBookingMulti" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitBookingMultiAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMultiV2">
+      <soap:operation soapAction="http://tempuri.org/SubmitBookingMultiV2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SubmitBookingMultiV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicket">
+      <soap:operation soapAction="http://tempuri.org/IssueTicket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:IssueTicketAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicketCA">
+      <soap:operation soapAction="http://tempuri.org/IssueTicketCA" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:IssueTicketCAAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseReport">
+      <soap:operation soapAction="http://tempuri.org/CloseReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CloseReportAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenTodayReport">
+      <soap:operation soapAction="http://tempuri.org/OpenTodayReport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OpenTodayReportAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenReportByDate">
+      <soap:operation soapAction="http://tempuri.org/OpenReportByDate" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OpenReportByDateAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoidTicket">
+      <soap:operation soapAction="http://tempuri.org/VoidTicket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:VoidTicketAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullBooking">
+      <soap:operation soapAction="http://tempuri.org/OpenFullBooking" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OpenFullBookingAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullWPP">
+      <soap:operation soapAction="http://tempuri.org/OpenFullWPP" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:OpenFullWPPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SILoginCheck">
+      <soap:operation soapAction="http://tempuri.org/SILoginCheck" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SILoginCheckAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="VNAWSSoap12" type="tns:VNAWSSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="SearchFlightAuto">
+      <soap12:operation soapAction="http://tempuri.org/SearchFlightAuto" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SearchFlightAutoAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2">
+      <soap12:operation soapAction="http://tempuri.org/SearchFlightAutoV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SearchFlightAutoV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAutoV2FilterP">
+      <soap12:operation soapAction="http://tempuri.org/SearchFlightAutoV2FilterP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SearchFlightAutoV2FilterPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SearchFlightAEP">
+      <soap12:operation soapAction="http://tempuri.org/SearchFlightAEP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SearchFlightAEPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckConnection">
+      <soap12:operation soapAction="http://tempuri.org/CheckConnection" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CheckConnectionAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullTicketNumber">
+      <soap12:operation soapAction="http://tempuri.org/OpenFullTicketNumber" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OpenFullTicketNumberAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBooking">
+      <soap12:operation soapAction="http://tempuri.org/SubmitBooking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitBookingAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingV2">
+      <soap12:operation soapAction="http://tempuri.org/SubmitBookingV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitBookingV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OtherCommand">
+      <soap12:operation soapAction="http://tempuri.org/OtherCommand" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OtherCommandAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMulti">
+      <soap12:operation soapAction="http://tempuri.org/SubmitBookingMulti" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitBookingMultiAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SubmitBookingMultiV2">
+      <soap12:operation soapAction="http://tempuri.org/SubmitBookingMultiV2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SubmitBookingMultiV2Authentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicket">
+      <soap12:operation soapAction="http://tempuri.org/IssueTicket" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:IssueTicketAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="IssueTicketCA">
+      <soap12:operation soapAction="http://tempuri.org/IssueTicketCA" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:IssueTicketCAAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CloseReport">
+      <soap12:operation soapAction="http://tempuri.org/CloseReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:CloseReportAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenTodayReport">
+      <soap12:operation soapAction="http://tempuri.org/OpenTodayReport" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OpenTodayReportAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenReportByDate">
+      <soap12:operation soapAction="http://tempuri.org/OpenReportByDate" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OpenReportByDateAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoidTicket">
+      <soap12:operation soapAction="http://tempuri.org/VoidTicket" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:VoidTicketAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullBooking">
+      <soap12:operation soapAction="http://tempuri.org/OpenFullBooking" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OpenFullBookingAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="OpenFullWPP">
+      <soap12:operation soapAction="http://tempuri.org/OpenFullWPP" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:OpenFullWPPAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SILoginCheck">
+      <soap12:operation soapAction="http://tempuri.org/SILoginCheck" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:SILoginCheckAuthentication" part="Authentication" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="VNAWS">
+    <wsdl:port name="VNAWSSoap" binding="tns:VNAWSSoap">
+      <soap:address location="http://vnapi.maybay.net:88/VNAWS.asmx" />
+    </wsdl:port>
+    <wsdl:port name="VNAWSSoap12" binding="tns:VNAWSSoap12">
+      <soap12:address location="http://vnapi.maybay.net:88/VNAWS.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

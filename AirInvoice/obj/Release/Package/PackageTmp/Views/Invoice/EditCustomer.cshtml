@@ -1,0 +1,59 @@
+﻿@model AirlineInvoice.Models.Customers
+
+@{
+    ViewBag.Title = "SỬA THÔNG TIN KHÁCH HÀNG THƯỜNG XUYÊN";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-bold text-black">@ViewBag.Title</h3>
+            </div>
+            <div class="box-body">
+                @using (Html.BeginForm("UpdateCustomer", "Invoice", FormMethod.Post, new { @class = "form-horizontal", autocomplete = "off", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group" style="display:none">
+                        <label class="col-sm-2 control-label">ID</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="CustomerID" id="CustomerID" value="@Model.CustomerID" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Tên khách hàng</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="CustomerName" id="CustomerName" class="form-control" value="@Model.CustomerName" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Địa chỉ</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="CustomerAddress" id="CustomerAddress" class="form-control" value="@Model.CustomerAddress" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Mã số thuế</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="CustomerTax" id="CustomerTax" class="form-control" value="@Model.CustomerTax" />
+                        </div>
+                    </div>
+
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <a class="btn btn-white" href="@Url.Action("ListCustomer")">Hủy</a>
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

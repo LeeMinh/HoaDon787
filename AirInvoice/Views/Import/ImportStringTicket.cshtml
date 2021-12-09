@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "ImportStringTicket";
+}
+<script>
+    $(document).ready(function () {
+        $('#insertTicket').click(function () {
+            $("#squaresWaveG").show("slow");
+            $.ajax({
+                url: "/Import/InsertClick",
+                type: "post",
+                dataType: "text",
+                data: {
+                    stringTicket: $('#stringTicket').val()
+                },
+                success: function (data) {
+                    $('#message').append(data);
+                    $("#squaresWaveG").hide();
+                }
+            });
+        });
+       
+
+    });
+</script>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <div class="row">
+                    <div class="col-md-12">
+                        <textarea style="width:100%;height:300px;" id="stringTicket" name="stringTicket"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <input type="button" value="Thêm vé" id="insertTicket" class="btn btn-primary showsubmit pull-right" />
+                    </div>
+                </div>
+
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div id="message">
+
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

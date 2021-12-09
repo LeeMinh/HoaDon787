@@ -1,0 +1,114 @@
+﻿@{
+    var controllerName = @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString().ToLower();
+    var actionName = @HttpContext.Current.Request.RequestContext.RouteData.Values["action"].ToString().ToLower();
+    var arrRole = Roles.GetRolesForUser();
+    string roleName = string.Empty;
+    var profile = AirlineInvoice.Models.userprofile.CurrentUser;
+    var isAccount = profile != null && Roles.IsUserInRole(profile.UserName, AirlineInvoice.Utils.CommonFunction._Accounting)
+        && !Roles.IsUserInRole(profile.UserName, AirlineInvoice.Utils.CommonFunction._AdminRole)
+        && profile.AgentBranchID != 0;
+}
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+
+        <ul class="sidebar-menu">
+            <li class="header">MỤC CHỨC NĂNG</li>
+            @if (AirlineInvoice.Utils.CommonFunction.CheckAgentUserPermission())
+            {
+                <li class="treeview @(controllerName.Equals("account") || controllerName.Equals("generalinfo") || controllerName.Equals("agentbranch") ? "active" : "")">
+                    <a href="#">
+                        <i class="fa fa-info-circle"></i>
+                        <span>Thông tin đại lý</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li class="@(actionName.Equals("index") && controllerName.Equals("generalinfo") ? "active" : "")">
+                            <a href="@Url.Action("Index", "GeneralInfo")"><i class="fa fa-info-circle"></i>Thông tin chung</a>
+                        </li>
+                        <li class="@(actionName.Equals("index") && controllerName.Equals("agentbranch") ? "active" : "")">
+                            <a href="@Url.Action("Index", "AgentBranch")"><i class="fa fa-bank"></i>Danh sách chi nhánh</a>
+                        </li>
+                        <li class="@(actionName.Equals("manageraccount") ? "active" : "")">
+                            <a href="@Url.Action("ManagerAccount", "Account")"><i class="fa fa-user"></i>Quản lý người dùng</a>
+                        </li>
+                    </ul>
+                </li>
+            }
+            <li class="treeview  @(controllerName.Equals("invoice") || controllerName.Equals("ticket") || controllerName.Equals("home") ? "active" : "")">
+                <a href="#">
+                    <i class="fa fa-calculator"></i>
+                    <span>Quản lý Hóa đơn</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    @if (!isAccount)
+                    {
+                        <li class="@(controllerName.Equals("ticket") ? "active" : "")">
+                            <a href="@Url.Action("Index","Ticket")"><i class="fa fa-plane"></i>Danh sách vé bán</a>
+                            <ul class="treeview-menu">
+                                <li class="@(controllerName.Equals("ticket") && actionName.Equals("allTicket") ? "active" : "")">
+                                    <a href="@Url.Action("AllTicket", "Ticket")"><i class="fa fa-circle-o"></i>Toàn bộ vé</a>
+                                </li>
+                                <li class="@(controllerName.Equals("ticket") && actionName.Equals("dometic") ? "active" : "")">
+                                    <a href="@Url.Action("Dometic","Ticket")"><i class="fa fa-circle-o"></i>Vé nội địa</a>
+                                </li>
+                                <li class="@(controllerName.Equals("ticket") && actionName.Equals("global") ? "active" : "")">
+                                    <a href="@Url.Action("Global","Ticket")"><i class="fa fa-circle-o"></i>Vé quốc tế</a>
+                                </li>
+                                <li class="@(controllerName.Equals("ticket") && actionName.Equals("changed") ? "active" : "")">
+                                    <a href="@Url.Action("Changed","Ticket")"><i class="fa fa-circle-o"></i>Vé xuất đổi</a>
+                                </li>
+                                <li class="@(controllerName.Equals("ticket") && actionName.Equals("return") ? "active" : "")">
+                                    <a href="@Url.Action("Return","Ticket")"><i class="fa fa-circle-o"></i>Vé hoàn</a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                    <li class="@(controllerName.Equals("invoice") && actionName.Equals("index") ? "active" : "")">
+                        <a href="@Url.Action("Index", "Invoice")"><i class="fa fa-list-ul"></i>Danh sách hóa đơn</a>
+                    </li>
+                    <li class="@(actionName.Equals("addinvoice") ? "active" : "")">
+                        <a href="@Url.Action("AddInvoice","Invoice")"><i class="fa fa-coffee"></i>Xuất hóa đơn mới</a>
+                    </li>
+                    <li class="@(actionName.Equals("listcustomer") ? "active" : "")">
+                        <a href="@Url.Action("ListCustomer", "Invoice")"><i class="fa fa-user-plus"></i>Khách hàng thường xuyên</a>
+                    </li>
+                    
+                </ul>
+            </li>
+            <li class="treeview  @(controllerName.Equals("viewreportinvoice") || controllerName.Equals("viewreportticket") ? "active" : "")">
+                <a href="#">
+                    <i class="fa fa-line-chart"></i>
+                    <span>Báo cáo</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@(controllerName.Equals("viewreportinvoice") && actionName.Equals("index") ? "active" : "")">
+                        <a href="@Url.Action("index", "viewreportinvoice")"><i class="fa fa-calendar"></i>Báo cáo sử dụng hóa đơn</a>
+                    </li>
+                    <li class="@(controllerName.Equals("viewreportticket") && actionName.Equals("index") ? "active" : "")">
+                        <a href="@Url.Action("index", "viewreportticket")"><i class="fa fa-calendar"></i>Báo cáo sử dụng vé</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="treeview  @(controllerName.Equals("import") ? "active" : "")">
+                <a href="#">
+                    <i class="fa fa-plane"></i>
+                    <span>Thêm vé</span>
+                    <i class="fa fa-angle-left pull-right"></i>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="@(actionName.Equals("upload") ? "active" : "")">
+                        <a href="@Url.Action("Upload", "Import")"><i class="fa fa-file-excel-o"></i>Thêm vé từ file excel</a>
+                    </li>
+                    <li class="@(actionName.Equals("ImportStringTicket") ? "active" : "")">
+                        <a href="@Url.Action("ImportStringTicket", "Import")"><i class="fa fa-file-excel-o"></i>Thêm vé</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>

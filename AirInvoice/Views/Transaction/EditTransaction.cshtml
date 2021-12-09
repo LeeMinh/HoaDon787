@@ -1,0 +1,165 @@
+﻿@model AirlineInvoice.Models.TransactionModel
+@{
+    ViewBag.Title = "SỬA GIAO DỊCH";
+}
+<link href="~/Content/plugins/steps/jquery.steps.css" rel="stylesheet">
+<script type="text/javascript">
+    var TransactionModel = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model))');
+    var identityNumber = '@Model.Transaction.IdentityNumber';
+    function txtIdentityNumber_Blur() {
+        var newIdentity = $("#txtIdentityNumber").val();
+        if (newIdentity != identityNumber) {
+            identityNumber = newIdentity;
+            $("#squaresWaveG").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SearchCustomer", "Home")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    identityNumber: identityNumber
+                }),
+                success: function (data) {
+                    $("#squaresWaveG").hide();
+                    if (data != null && data.CustomerID > 0) {
+                        $("#txtCustomerName").val(data.FullName);
+                        $("#txtPhone").val(data.Phone);
+                        $("#hdCustomerID").val(data.CustomerID);
+                        TransactionModel.Transaction.CustomerID = data.CustomerID;
+                        TransactionModel.Transaction.CustomerName = data.FullName;
+                    }
+                    else {
+                        $("#hdCustomerID").val(data.CustomerID);
+                    }
+                }
+            });
+        }
+    }
+
+    $(function () {
+        $('#txtStartTime').datetimepicker({
+            mask: true
+        });
+        $('#txtStartTime').val('@Model.Transaction.StartTime.ToString("yyyy/MM/dd HH:mm")');
+        $('#txtEndTime').datetimepicker({
+            mask: true
+        });
+        $('#txtEndTime').val('@Model.Transaction.EndTime.ToString("yyyy/MM/dd HH:mm")');
+    });
+</script>
+<style type="text/css">
+    .step a {
+        width: 100%;
+        margin-left: 8px;
+        margin-right: 8px;
+    }
+</style>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div id="lblError" style="color: red; display: none;"></div>
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            <a href="#" class="btn btn-primary">Thông tin chung</a>
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @if (Model.Transaction.TransactionID > 0)
+            {
+                @Html.ActionLink("Phòng đã thuê (" + Model.RoomCount + ")", "TransactionRoom", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+            }
+            else
+            {
+                <a href="#" class="btn btn-primary">Phòng đã thuê (0)</a>
+            }
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @if (Model.Transaction.TransactionID > 0)
+            {
+                @Html.ActionLink("Danh sách khách (" + Model.CustomerCount + ")", "TransactionCustomer", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+            }
+            else
+            {
+                <a href="#" class="btn btn-primary">Danh sách khách (0)</a>
+            }
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @if (Model.Transaction.TransactionID > 0)
+            {
+                @Html.ActionLink("Dịch vụ sử dụng (" + Model.ServiceCount + ")", "TransactionService", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+            }
+            else
+            {
+                <a href="#" class="btn btn-primary">Dịch vụ sử dụng (0)</a>
+            }
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 id="form-title">@ViewBag.Title</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("EditTransaction", "Transaction", FormMethod.Post, new { id = "update-transaction", autocomplete = "off", @class = "form-horizontal" }))
+                    {
+ @Html.AntiForgeryToken()
+ @Html.ValidationSummary(true)
+ @Html.HiddenFor(x => x.Transaction.TransactionID);
+                        @Html.HiddenFor(x => x.Transaction.CustomerID, new { id = "hdCustomerID" });
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" title="Chứng minh thư nhân dân">CMTND</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.Transaction.IdentityNumber, new { @class = "form-control", id = "txtIdentityNumber", onblur = "txtIdentityNumber_Blur();", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tên khách</label>
+                            <div class="col-sm-10">@Html.TextBoxFor(m => m.Transaction.CustomerName, new { @class = "form-control", id = "txtCustomerName", autocomplete = "off" })
+                                @Html.ValidationMessageFor(m => m.Transaction.CustomerName)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Điện thoại</label>
+                            <div class="col-sm-10">@Html.TextBoxFor(m => m.Transaction.Phone, new { @class = "form-control", id = "txtPhone", autocomplete = "off" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Giờ giao dịch</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.Transaction.StartTime, "yyyy-MM-dd HH:mm", new { @class = "form-control", id = "txtStartTime" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Giờ kết thúc</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.Transaction.EndTime, "yyyy-MM-dd HH:mm", new { @class = "form-control", id = "txtEndTime" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tổng thanh toán</label>
+                            <div class="col-sm-10">
+                                @Html.EditorFor(m => m.Transaction.TotalAmount, new
+                           {
+                               htmlAttributes = new { type = "number", @class = "form-control money", id = "txtTotalAmount" }
+                           })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Mô tả</label>
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(m => m.Transaction.Description, new { @class = "form-control", id = "txtDescription" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                @Html.ActionLink("Hủy", "Index", null, new { @class = "btn btn-white" })
+                                <input type="submit" value="@(Model.Transaction.TransactionID > 0 ? "Cập nhật" : "Thêm mới")" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

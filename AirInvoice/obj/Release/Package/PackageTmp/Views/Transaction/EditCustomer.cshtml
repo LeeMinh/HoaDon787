@@ -1,0 +1,192 @@
+﻿@{
+    ViewBag.Title = "SỬA THÔNG TIN KHÁCH HÀNG";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AirlineInvoice.Models.TransactionRoomCustomer
+@{
+    int CountService = ViewBag.CountService;
+    int CountCustomer = ViewBag.CountCustomer;
+    int CountRoom = ViewBag.CountRoom;
+    var  lstRoom = new List<SelectListItem>();
+    lstRoom.Add(new SelectListItem() { Selected = true, Text = "Chọn phòng", Value = "0" });
+    
+    if(Model.TransactionRooms!=null)
+    {
+        foreach (var item in Model.TransactionRooms)
+        {
+            lstRoom.Add(new SelectListItem() { Selected = Model.TransactionRoomID == item.TransactionRoomID ? true : false, 
+                Text = item.RoomCode + " - Tầng " + item.Floor, Value = item.TransactionRoomID.ToString() });
+        }
+    }
+}
+<script type="text/javascript">
+    var lstRoom = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.TransactionRooms))');
+    $(function () {
+        $('#txtStartTime').datetimepicker({
+            mask: true
+        });
+        $('#txtStartTime').val('@Model.StartTime.ToString("yyyy/MM/dd HH:mm")');
+        $('#txtEndTime').datetimepicker({
+            mask: true
+        });
+        $('#txtEndTime').val('@Model.EndTime.ToString("yyyy/MM/dd HH:mm")');
+    });
+   
+    function SubmitCustomer() {
+        var customer = SelectedCustomer();
+        if (customer != null) {
+            $("#txtIdentityNumber").val(customer.IdentityNumber);
+            $("#txtCustomerName").val(customer.FullName);
+            $("#txtPhone").val(customer.Phone);
+            $("#hdCustomerID").val(customer.CustomerID);
+        }
+    }
+    var identityNumber = '@Model.IdentityNumber';
+    function txtIdentityNumber_Blur() {
+        var newIdentity = $("#txtIdentityNumber").val();
+        if (newIdentity != identityNumber) {
+            identityNumber = newIdentity;
+            $("#squaresWaveG").show();
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SearchCustomer", "Home")',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({
+                    identityNumber: identityNumber
+                }),
+                success: function (data) {
+                    $("#squaresWaveG").hide();
+                    if (data != null && data.CustomerID > 0) {
+                        $("#txtCustomerName").val(data.FullName);
+                        $("#txtPhone").val(data.Phone);
+                        $("#hdCustomerID").val(data.CustomerID);
+                        lstCustomer.push(data);
+                        $("#drpCustomer").val(data.CustomerID);
+                    }
+                    else {
+                        $("#hdCustomerID").val(data.CustomerID);
+                    }
+                }
+            });
+        }
+    }
+
+</script>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div id="lblError" style="color: red; display: none;"></div>
+    <div href="#" class="btn btn-info" style="width: 100%; cursor: default;">@Model.Transaction.TransactionCode</div>
+    <div class="hr-line-dashed"></div>
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @Html.ActionLink("Thông tin chung", "EditTransaction", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(Model.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @Html.ActionLink("Phòng đã thuê (" + CountRoom + ")", "TransactionRoom", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+           @Html.ActionLink("Danh sách khách ở (" + CountCustomer + ")", "TransactionCustomer", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @Html.ActionLink("Dịch vụ sử dụng (" + CountService + ")", "TransactionService", new { TransactionID =  AirlineInvoice.Utils.CommonFunction.Shrink( Model.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 id="form-title">@ViewBag.Title</h5>
+                </div>
+                <div class="ibox-content">
+                    @using (Html.BeginForm("EditCustomer", "Transaction", FormMethod.Post, new { autocomplete = "off", @class = "form-horizontal" }))
+                    {
+ @Html.AntiForgeryToken()
+ @Html.ValidationSummary()
+                        @Html.HiddenFor(x => x.CustomerID, new { id = "hdCustomerID" })
+                        @Html.HiddenFor(x => x.TransactionID)
+                        @Html.HiddenFor(x=>x.TransactionCustomerID)
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" title="Chọn phòng">Phòng</label>
+                            <div class="col-sm-10">
+                                @Html.DropDownListFor(x=>x.TransactionRoomID, lstRoom,new { id="drpRoom", onchange="drpRoom_change(this);", @class="form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label" title="Chứng minh thư nhân dân">CMTND</label>
+                            <div class="col-sm-10" style="position:relative;">
+                                @Html.TextBoxFor(m => m.IdentityNumber, new { @class = "form-control", id = "txtIdentityNumber", onblur = "txtIdentityNumber_Blur();", autocomplete = "off" })
+                                <a href="#" style="position: absolute; right: 25px; top: 8px;" title="Tìm kiếm trong danh sách khách hàng"
+                                    data-toggle="modal" data-target="#myModal" class="fa fa-search" >&nbsp;</a>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Tên khách</label>
+                            <div class="col-sm-10">@Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", id = "txtCustomerName", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Số điện thoại</label>
+                            <div class="col-sm-10">@Html.TextBoxFor(m => m.Phone, new { @class = "form-control", id = "txtPhone", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Giờ vào</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.StartTime, new { @class = "form-control", id = "txtStartTime", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Kết thúc</label>
+                            <div class="col-sm-10">
+                                @Html.TextBoxFor(m => m.EndTime, new { @class = "form-control", id = "txtEndTime", autocomplete = "off" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Mô tả</label>
+                            <div class="col-sm-10">
+                                @Html.TextAreaFor(m => m.Description, new { @class = "form-control", id = "txtDescription", autocomplete = "off" })
+                            </div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-sm-4 col-sm-offset-2">
+                                <a class="btn btn-white" href="@Url.Action("TransactionCustomer", new { TransactionID = AirlineInvoice.Utils.CommonFunction.Shrink(Model.TransactionID)})">Hủy</a>
+                                <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal  modal-wide fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn khách hàng</h4>
+            </div>
+            <div class="modal-body">
+                @{
+                    Html.RenderAction("Customers", "Search");   
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="fa fa-check btn btn-primary" data-dismiss="modal" onclick="SubmitCustomer();">Đồng ý</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<style type="text/css">
+    .modal.modal-wide .modal-dialog {
+        width: 90%;
+    }
+    .modal-wide .modal-body {
+        overflow-y: auto;
+    }
+</style>

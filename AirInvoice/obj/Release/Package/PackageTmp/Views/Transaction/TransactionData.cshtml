@@ -1,0 +1,65 @@
+﻿@model List<AirlineInvoice.Models.Transaction>
+<table class="table table-striped table-bordered table-hover" id="tblPq">
+    <thead>
+        <tr>
+            <th>Chi tiết</th>
+            <th title="Mã khách sạn">Tên khách hàng</th>
+            <th title="Tên khách sạn">Ngày giao dịch</th>
+            <th title="Số chứng minh thư nhân dân">CMTND</th>
+            <th>Điện thoại</th>
+            <th>Giờ đăng ký</th>
+            <th>Giờ kết thúc</th>
+            <th>Tổng tiền</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody id="tblHotel">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td align="center">
+                    @Html.ActionLink(" ", "TransactionDetail", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionID) }, new { @class = "btnAction btnView litebox" })
+                </td>
+                <td>@item.CustomerName</td>
+                <td>@string.Format("{0:yyyy-MM-dd}", item.StartTime)</td>
+                <td>@item.IdentityNumber</td>
+                <td>@item.Phone</td>
+                <td align="center">@string.Format("{0:yyyy-MM-dd HH:mm}", item.StartTime)</td>
+                <td align="center">@string.Format("{0:yyyy-MM-dd HH:mm}", item.EndTime)</td>
+                <td>
+                    @string.Format("{0:#,#}", item.TotalAmount)
+                </td>
+                <td align="center">
+                    @if(!item.IsCheckOut)
+                    {
+                    @Html.ActionLink(" ", "EditTransaction", new {id = AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionID) }, new { @class="btnAction btnEdit"})
+                    }
+                </td>
+                <td align="center"><a href="javascript:void(0);" onclick="confirmDelete('@AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionID)')" class = "btnAction btnDelete">&nbsp;</a> </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")
+<link href="~/Content/litebox.css" rel="stylesheet" />
+<script src="~/Scripts/litebox.js"></script>
+<script type="text/javascript">
+    $('.litebox').liteBox({
+        revealSpeed: 400,
+        background: 'rgba(0,0,0,.8)',
+        overlayClose: true,
+        escKey: true,
+        navKey: false,
+        errorMessage: 'Error loading content.'
+    });
+</script>

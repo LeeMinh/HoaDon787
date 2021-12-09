@@ -1,0 +1,118 @@
+﻿@model List<AirlineInvoice.Models.Invoice>
+@using AirlineInvoice.Models
+<script>
+    function ShowTicketNo(invoiceID, showDefault) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetTicketNo")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                InvoiceID: invoiceID
+            }),
+            success: function (data) {
+                if (showDefault == true) {
+                    $("#lblVCR").val(data.result);
+                    $("#vcr-display").show();
+                    //}
+                }
+                else {
+                    ShowWarning(data.result);
+                }
+            }
+        });
+    }
+</script>
+@if (ViewBag.sumInvoice != null)
+{
+    if (!string.IsNullOrEmpty(ViewBag.fromDate) && !string.IsNullOrEmpty(ViewBag.toDate))
+    {
+        if (ViewBag.sumTotal == 0)
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất từ ngày <strong>@ViewBag.fromDate</strong> đến ngày <strong>@ViewBag.toDate</strong></p>
+        }
+        else if (ViewBag.sumTotalAgentFee == 0)
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất với tổng số tiền là <strong>@string.Format("{0:#,#}", ViewBag.sumTotal)</strong> từ ngày <strong>@ViewBag.fromDate</strong> đến ngày <strong>@ViewBag.toDate</strong></p>
+        }
+        else
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất với tổng số tiền là <strong>@string.Format("{0:#,#}", ViewBag.sumTotal)</strong> và phí dịch vụ là <strong>@string.Format("{0:#,#}", ViewBag.sumTotalAgentFee)</strong> từ ngày <strong>@ViewBag.fromDate</strong> đến ngày <strong>@ViewBag.toDate</strong></p>
+        }
+    }
+    else
+    {
+        if (ViewBag.sumTotal == 0)
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất</p>
+        }
+        else if (ViewBag.sumTotalAgentFee == 0)
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất với tổng số tiền là <strong>@string.Format("{0:#,#}", ViewBag.sumTotal)</strong></p>
+        }
+        else
+        {
+            <p style="margin-left:9px;">Đã có <strong>@ViewBag.sumInvoice</strong> hóa đơn được xuất với tổng số tiền là <strong>@string.Format("{0:#,#}", ViewBag.sumTotal)</strong> và phí dịch vụ là <strong>@string.Format("{0:#,#}", ViewBag.sumTotalAgentFee)</strong></p>
+        }
+        
+    }
+}
+<table class="table table-bordered table-striped" id="tblPq">
+    <thead>
+        <tr>
+            <th align="center">STT</th>
+            <th align="center">Mã - Số hóa đơn</th>
+            <th align="center">Tổng tiền</th>
+            <th align="center">Phí DV</th>
+            <th align="center">Chi nhánh</th>
+            <th align="center">Khách</th>
+            <th align="center">Ngày</th>
+            <th align="center">Người tạo</th>
+            <th align="center">Số vé</th>
+        </tr>
+    </thead>
+    <tbody id="tblInvoice">
+        @if (Model != null && Model.Count > 0)
+        {
+            int count = 1;
+            int countTicket = 0;
+            foreach (var item in Model)
+            {
+                //Đếm số lượng vé
+                using (var db = new InvoiceContext())
+                {
+                    List<InvoiceDetail> listInvoiceDetails = new List<InvoiceDetail>();
+                    var query = db.InvoiceDetails.Where(x => x.InvoiceID == item.InvoiceID);
+                    countTicket = query.Count();
+                }
+                <tr>
+                    <td align="center">@count</td>
+                    <td align="center"><a href="/Invoice/EditInvoice/@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceID)" style="color: #0094ff;">@item.InvoiceID - @item.InvoiceNumber</a></td>
+                    <td align="right">@string.Format("{0:#,#}", item.Total)</td>
+                    <td align="right">@string.Format("{0:#,#}", item.TotalAgentFee)</td>
+                    <td>@item.BranchName</td>
+                    <td align="center">@item.CustomerName</td>
+                    <td align="center">@string.Format("{0:dd/MM/yyyy}", item.InvoiceDate)</td>
+                    <td>@AirlineInvoice.Utils.CommonFunction.GetUsernameByID(item.UserCreate)</td>
+                    <td>
+                        <a href="javascript:void(0);" onclick="ShowTicketNo('@item.InvoiceID')"><span class="glyphicon glyphicon-search"></span></a><br />
+                        <p>@countTicket</p>
+                    </td>
+                </tr>
+                count++;
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="form-group" id="vcr-display" style="display: none;">
+    <textarea class="col-sm-12 form-control" style="background-color:#fbde99; height: 80px;" id="lblVCR"></textarea>
+</div>
+
+
+@Html.Partial("_NavigatePaging")

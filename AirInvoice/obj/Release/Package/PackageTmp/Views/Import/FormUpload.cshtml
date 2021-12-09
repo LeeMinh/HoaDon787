@@ -1,0 +1,69 @@
+﻿@{
+    Layout = null;
+}
+@model System.Data.DataTable
+@using System.Data;
+@using System;
+@using System.Globalization;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FormUpload</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("InsertInvoiceDetails", "Import", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary()
+            if (Model != null)
+            {
+
+                <table>
+                    <thead>
+                        <tr>
+                            @foreach (DataColumn col in Model.Columns)
+                            {
+                                <th>@col.ColumnName</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            int i = 0;
+                            CultureInfo provider = CultureInfo.InvariantCulture;
+                            string format = "M/dd/yyyy";
+                            foreach (DataRow row in Model.Rows)
+                            {
+                                <tr>
+                                    @foreach (DataColumn col in Model.Columns)
+                                    {
+
+                                        string issdate = col.ColumnName + i;
+                                        if (issdate == "Column2" + i && i >= 1 && !string.IsNullOrEmpty(row[col.ColumnName].ToString().Trim()))
+                                        {
+                                            <td><input type="text" value="@(DateTime.FromOADate(Convert.ToDouble(row[col.ColumnName])))" name="@(col.ColumnName + i)" /></td>
+                                        }
+                                        else
+                                        {
+                                            <td><input type="text" value="@row[col.ColumnName]" name="@(col.ColumnName + i)" /></td>
+                                        }
+                                        @*<td><input type="text" value="@row[col.ColumnName]" name="@(col.ColumnName + i)" /></td>*@
+                                    }
+                                </tr>
+                                    i++;
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                <input type="text" value="@i" name="count" style="display:none;" />
+                <input type="text" placeholder="Mã hóa đơn" name="InvoiceID" style="display:block;" />
+                <input class="" type="submit" value="Xác nhận" />
+            }
+        }
+    </div>
+</body>
+</html>

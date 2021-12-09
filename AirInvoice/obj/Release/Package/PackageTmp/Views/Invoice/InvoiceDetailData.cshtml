@@ -1,0 +1,144 @@
+﻿@model List<AirlineInvoice.Models.InvoiceDetail>
+@{
+    var currentUser = AirlineInvoice.Models.userprofile.CurrentUser;
+    string display = "";
+    if (currentUser.AgentBranchID == 0 || currentUser.FullName == "TRAN THI THU" || currentUser.UserName == "HONGTRINH" || currentUser.UserName == "hongtrinh")
+    {
+        display = "block";
+    }
+    else
+    {
+        display = "none";
+    }
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#select_all").change(function () {
+            $(".checkbox_class").prop("checked", $(this).prop("checked"));
+        });
+    });
+    function getListChecked() {
+        var notChecked = [], checked = [];
+        $(".checkbox_class").each(function () {
+            if (this.checked) {
+                checked.push(this.id);
+            } else {
+                notChecked.push(this.id);
+            }
+        });
+        return checked;
+    }
+</script>
+@{Int64? total = 0;}
+<table class="table table-bordered table-striped" id="tblInvoiceDetail">
+    <thead>
+        <tr>
+            <th>Loại bỏ</th>
+            <th>Số vé</th>
+            <th>Ngày xuất</th>
+            <th>Trip</th>
+            <th>PNR</th>
+            <th>VCR</th>
+            <th>Fare</th>
+            <th>VAT</th>
+            <th>Thuế và phí khác</th>
+            <th>Phí khác</th>
+            <th>Tổng giá vé</th>
+            <th style="display:@display;">Sửa vé</th>
+            <th><input type="checkbox" id="select_all" /></th>
+        </tr>
+    </thead>
+    <tbody id="tblInvoice">
+
+        @if (Model != null && Model.Count > 0)
+        {
+
+            foreach (var item in Model)
+            {
+                string color = "";
+                if (item.TicketType != 4)
+                {
+                    if ((item.TicketFare == null ? 0 : item.TicketFare) + (item.TicketVAT == null ? 0 : item.TicketVAT) + (item.ChangeLevelFeeVAT == null ? 0 : item.ChangeLevelFeeVAT) + (item.TicketTax == null ? 0 : item.TicketTax) + (item.TicketTaxGlobal == null ? 0 : item.TicketTaxGlobal) + (item.OtherFees == null ? 0 : item.OtherFees) + (item.ChangeLevelFee == null ? 0 : item.ChangeLevelFee) + (item.ReturnFees == null ? 0 : item.ReturnFees) != item.TicketPrice)
+                    {
+                        color = "red";
+                    }
+                }
+                else
+                {
+                    if ((item.TicketFare == null ? 0 : item.TicketFare) + (item.TicketVAT == null ? 0 : item.TicketVAT) + (item.ChangeLevelFeeVAT == null ? 0 : item.ChangeLevelFeeVAT) + (item.TicketTax == null ? 0 : item.TicketTax) + (item.TicketTaxGlobal == null ? 0 : item.TicketTaxGlobal) - (item.OtherFees == null ? 0 : item.OtherFees) - (item.ChangeLevelFee == null ? 0 : item.ChangeLevelFee) - (item.ReturnFees == null ? 0 : item.ReturnFees) != item.TicketPrice)
+                    {
+                        color = "red";
+                    }
+                }
+                <tr id="detail-@item.InvoiceDetailID">
+
+                    <td align="center"><a href="javascript:void(0);" onclick="confirmDelete('@item.InvoiceDetailID')"><i class="fa fa-remove"></i></a></td>
+                    @if (item.TicketType != 4)
+                    {
+                        <td>
+                            @item.TicketNo
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            @item.ChangeTicket
+                        </td>
+                    }
+
+                    <td align="center">@string.Format("{0:dd/MM/yyyy}", item.SoldDate)</td>
+                    <td>@item.TripCode</td>
+                    <td>@item.PNRCode</td>
+                    <td>
+                        <a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceDetailID)')"><i class="fa fa-info-circle"></i></a>
+                    </td>
+                    <td align="right">@string.Format("{0:#,#;(0:#,#);0}", item.TicketFare)</td>
+                    <td align="right">
+                        @string.Format("{0:#,#;(0:#,#);0}", (item.TicketVAT == null ? 0 : item.TicketVAT) + (item.ChangeLevelFeeVAT == null ? 0 : item.ChangeLevelFeeVAT))
+                    </td>
+                    <td align="right">@string.Format("{0:#,#;(0:#,#);0}", (item.TicketTax == null ? 0 : item.TicketTax) + (item.TicketTaxGlobal == null ? 0 : item.TicketTaxGlobal))</td>
+                    <td align="right">
+                        @string.Format("{0:#,#;(0:#,#);0}", (item.OtherFees == null ? 0 : item.OtherFees) + (item.ChangeLevelFee == null ? 0 : item.ChangeLevelFee) + (item.ReturnFees == null ? 0 : item.ReturnFees))
+                    </td>
+                    <td align="right" style="color:@color">@string.Format("{0:#,#;(0:#,#);0}", item.TicketPrice)</td>
+
+                    <td style="display: @display;">
+                        @Html.ActionLink("Sửa", "FixTicket", new { ticketNo = item.TicketNo })
+                    </td>
+                    <td><input type="checkbox" class="checkbox_class" id="@item.InvoiceDetailID" /></td>
+
+                </tr>
+                    total += (item.TicketPrice == null ? 0 : item.TicketPrice);
+                    if (total%1000 != 0)
+                    {
+                        <tr><td>@string.Format("{0:#,#;(0:#,#);0}", total)</td></tr>
+                        <tr><td>@string.Format("{0:#,#;(0:#,#);0}", item.TicketPrice)</td></tr>
+                    }
+            }
+
+        }
+        else
+        {
+            <tr id="detail-empty">
+                <td colspan="11">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td align="right" style="font-weight:bold;">@string.Format("{0:#,#}", total)</td>
+            <td></td>
+            <td><a href="javascript:void(0);" onclick="confirmDeletemulti(getListChecked())"><i class="fa fa-remove" /></a></td>
+        </tr>
+    </tfoot>
+</table>

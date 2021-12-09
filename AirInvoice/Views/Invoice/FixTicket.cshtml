@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "FixTicket";
+}
+@using AirlineInvoice.Models;
+<script>
+    //show VCR
+    function ShowVCR(detailID, showDefault) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetVCR")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                InvoiceDetailID: detailID
+            }),
+            success: function (data) {
+                if (showDefault == true) {
+                    $("#lblVCR").val(data.result);
+                    $("#vcr-display").show();
+                    //}
+                }
+                else {
+                    ShowWarning(data.result);
+                }
+            }
+        });
+    }
+    //VAT
+
+    $(document).ready(function () {
+        $("#submitvat").click(function () {
+            var TicketVAT = parseInt($("#TicketVAT").val());
+            var ChangeLevelFeeVAT = parseInt($("#ChangeLevelFeeVAT").val());
+            if (TicketVAT != null && !isNaN(TicketVAT) && ChangeLevelFeeVAT != null && !isNaN(ChangeLevelFeeVAT)) {
+                var vatvalue = TicketVAT + ChangeLevelFeeVAT;
+                $("#vatvalue").val(vatvalue);
+                $('#vat').modal('toggle');
+            }
+        });
+
+        $("#submitthuephikhac").click(function () {
+            var TicketTax = parseInt($("#TicketTax").val());
+            var TicketTaxGlobal = parseInt($("#TicketTaxGlobal").val());
+            if (TicketTax != null && !isNaN(TicketTax) && TicketTaxGlobal != null && !isNaN(TicketTaxGlobal)) {
+                var thuephikhacvalue = TicketTax + TicketTaxGlobal;
+                $("#thuephikhacvalue").val(thuephikhacvalue);
+                $('#thuephikhac').modal('toggle');
+            }
+        });
+
+        $("#submitphikhac").click(function () {
+            var OtherFees = parseInt($("#OtherFees").val());
+            var ChangeLevelFee = parseInt($("#ChangeLevelFee").val());
+            var ReturnFees = parseInt($("#ReturnFees").val());
+            if (OtherFees != null && !isNaN(OtherFees) && ChangeLevelFee != null && !isNaN(ChangeLevelFee) && ReturnFees != null && !isNaN(ReturnFees)) {
+                var phikhacvalue = OtherFees + ChangeLevelFee + ReturnFees;
+                $("#phikhacvalue").val(phikhacvalue);
+                $('#phikhac').modal('toggle');
+            }
+        });
+    });
+</script>
+@{List<InvoiceDetailFixLog> listTicketlog = (List<InvoiceDetailFixLog>)ViewData["listTicketlog"];}
+<h3 class="box-title text-bold text-black" style="font-weight: 400;FONT-SIZE: 20px;">
+    LỊCH SỬ SỬA VÉ
+</h3>
+@if (listTicketlog.Count() > 0)
+{
+    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Số vé</th>
+                <th>VCR</th>
+                <th>Fare</th>
+                <th>VAT</th>
+                <th>Thuế và phí khác</th>
+                <th>Phí khác</th>
+                <th>Tổng giá vé</th>
+                <th>Hành trình</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticket in listTicketlog)
+            {
+                <tr role="row">
+                    <td>Trước khi sửa</td>
+                    <td><input type="text" readonly value="@ticket.TicketNo" /></td>
+                    <td><a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(ticket.InvoiceDetailID)')"><i class="fa fa-info-circle"></i></a></td>
+                    <td><input type="text" value="@ticket.TicketFare" readonly /></td>
+                    <td><input type="text" readonly value="@((ticket.TicketVAT == null ? 0 : ticket.TicketVAT) + (ticket.ChangeLevelFeeVAT == null ? 0 : ticket.ChangeLevelFeeVAT))" /></td>
+                    <td><input type="text" readonly value="@((ticket.TicketTax == null ? 0 : ticket.TicketTax) + (ticket.TicketTaxGlobal == null ? 0 : ticket.TicketTaxGlobal))" /></td>
+                    <td><input type="text" readonly value="@((ticket.OtherFees == null ? 0 : ticket.OtherFees) + (ticket.ChangeLevelFee == null ? 0 : ticket.ChangeLevelFee) + (ticket.ReturnFees == null ? 0 : ticket.ReturnFees))" /></td>
+                    <td><input type="text" readonly value="@ticket.TicketPrice" /></td>
+                    <td><input type="text" readonly value="@ticket.TripCode" /></td>
+                </tr>
+                <tr role="row">
+                    <td>Sau khi sửa</td>
+                    <td><input type="text" readonly value="@ticket.TicketNo" /></td>
+                    <td><a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(ticket.InvoiceDetailID)')"><i class="fa fa-info-circle"></i></a></td>
+                    <td><input type="text" value="@ticket.TicketFareNew" readonly /></td>
+                    <td><input type="text" readonly value="@((ticket.TicketVATNew == null ? 0 : ticket.TicketVATNew) + (ticket.ChangeLevelFeeVATNew == null ? 0 : ticket.ChangeLevelFeeVATNew))" /></td>
+                    <td><input type="text" readonly value="@((ticket.TicketTaxNew == null ? 0 : ticket.TicketTaxNew) + (ticket.TicketTaxGlobalNew == null ? 0 : ticket.TicketTaxGlobalNew))" /></td>
+                    <td><input type="text" readonly value="@((ticket.OtherFeesNew == null ? 0 : ticket.OtherFeesNew) + (ticket.ChangeLevelFeeNew == null ? 0 : ticket.ChangeLevelFeeNew) + (ticket.ReturnFeesNew == null ? 0 : ticket.ReturnFeesNew))" /></td>
+                    <td><input type="text" readonly value="@ticket.TicketPriceNew" /></td>
+                    <td><input type="text" readonly value="@ticket.TripCodeNew" /></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <th colspan="2">Người sửa: @ticket.FixUser</th>
+                    <th>Số vé sửa: @ticket.TicketNo</th>
+                    <th colspan="3">Ngày sửa: @ticket.FixDatetime</th>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Không có dữ liệu</p>
+}
+<h3 class="box-title text-bold text-black" style="font-weight: 400;FONT-SIZE: 20px;">
+    SỬA THÔNG TIN VÉ
+</h3>
+@{InvoiceDetailFix item = (InvoiceDetailFix)ViewData["ticket"];}
+@using (Html.BeginForm("EditTicket", "Invoice", FormMethod.Post))
+{
+    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+        <thead>
+            <tr>
+                <th>Số vé</th>
+                <th>VCR</th>
+                <th>Fare</th>
+                <th>VAT</th>
+                <th>Thuế và phí khác</th>
+                <th>Phí khác</th>
+                <th>Tổng giá vé</th>
+                <th>Hành trình</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr role="row">
+                <td><input type="text" value="@item.TicketNo" readonly id="TicketNo" name="TicketNo" /></td>
+                <td><a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceDetailID)')"><i class="fa fa-info-circle"></i></a></td>
+                <td><input type="text" value="@item.TicketFare" id="TicketFare" name="TicketFare" /></td>
+                <td><input type="text" readonly data-target="#vat" data-toggle="modal" value="@((item.TicketVAT == null ? 0 : item.TicketVAT) + (item.ChangeLevelFeeVAT == null ? 0 : item.ChangeLevelFeeVAT))" id="vatvalue" /></td>
+                <td><input type="text" readonly data-target="#thuephikhac" data-toggle="modal" value="@((item.TicketTax == null ? 0 : item.TicketTax) + (item.TicketTaxGlobal == null ? 0 : item.TicketTaxGlobal))" id="thuephikhacvalue" /></td>
+                <td><input type="text" readonly data-target="#phikhac" data-toggle="modal" value="@((item.OtherFees == null ? 0 : item.OtherFees) + (item.ChangeLevelFee == null ? 0 : item.ChangeLevelFee) + (item.ReturnFees == null ? 0 : item.ReturnFees))" id="phikhacvalue" /></td>
+                <td><input type="text" value="@item.TicketPrice" id="TicketPrice" name="TicketPrice" /></td>
+                <td><input type="text" value="@item.TripCode" id="TripCode" name="TripCode" /></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Modal vat-->
+    <div class="modal fade" id="vat" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Thuế VAT</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td><label>VAT Giá Fare</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.TicketVAT" id="TicketVAT" name="TicketVAT" /><br /></td>
+                        </tr>
+                        <tr>
+                            <td><label>VAT Đổi hạng</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.ChangeLevelFeeVAT" id="ChangeLevelFeeVAT" name="ChangeLevelFeeVAT" /><br /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="submitvat" onclick="submitvat()">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal thuephikhac-->
+    <div class="modal fade" id="thuephikhac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Thuế và phí khác</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td><label>Thuế nội địa</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.TicketTax" id="TicketTax" name="TicketTax" /><br /></td>
+                        </tr>
+                        <tr>
+                            <td><label>Thuế quốc tế</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.TicketTaxGlobal" id="TicketTaxGlobal" name="TicketTaxGlobal" /><br /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="submitthuephikhac">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal phi khac-->
+    <div class="modal fade" id="phikhac" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Phí khác</h4>
+                </div>
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td><label>Phí khác</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.OtherFees" id="OtherFees" name="OtherFees" /><br /></td>
+                        </tr>
+                        <tr>
+                            <td><label>Phí đổi hạng</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.ChangeLevelFee" id="ChangeLevelFee" name="ChangeLevelFee" /><br /></td>
+                        </tr>
+                        <tr>
+                            <td><label>Phí hoàn</label></td>
+                            <td><input type="text" style="border: none;padding: 0px 0px 5px 5px;" value="@item.ReturnFees" id="ReturnFees" name="ReturnFees" /><br /></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" id="submitphikhac">Cập nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-white btn-sm" href="/Invoice/EditInvoice/@Session["EditInvoiceID"]">Quay lại</a>
+    <input type="submit" value="Cập nhật" />
+}

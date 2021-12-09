@@ -1,0 +1,143 @@
+﻿@{
+    ViewBag.Title = "DANH SÁCH HÓA ĐƠN ĐÃ LẬP";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(document).ready(function () {
+            $('#txtFromDate').datetimepicker({
+                timepicker: false,
+                format: 'd/m/Y'
+            });
+            //$('#txtFromDate').val('@DateTime.Today.AddDays(-10).ToString("dd/MM/yyyy")');
+            $('#txtToDate').datetimepicker({
+                timepicker: false,
+                format: 'd/m/Y'
+            });
+            //$('#txtToDate').val('@DateTime.Now.ToString("dd/MM/yyyy")');
+        });
+    });
+    function gotoPage(currentPage) {
+        var pageSize = parseInt($("#drpPageSize").val());
+        if (isNaN(pageSize) || pageSize == 0) pageSize = 20;
+        var invoiceID = $("#txtInvoiceID").val();
+        var invoiceNo = $("#txtInvoiceNo").val();
+        var ticketNoSearch = $("#txtTicketNoSearch").val();
+        var fromDate = $("#txtFromDate").val();
+        var toDate = $("#txtToDate").val();
+        var userID = $("#cboUser").val();
+        var invoiceType = $("#cboInvoiceType").val();
+        var invoiceStatus = $("#cboStatus").val();
+        var agentBranches = $("#cboagentBranches").val();
+        var cusName = $("#txtCusName").val();
+
+
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetInvoiceData")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                currentPage: currentPage,
+                pageSize: pageSize,
+                invoiceid: invoiceID,
+                invoiceno: invoiceNo,
+                ticketNoSearch: ticketNoSearch,
+                fromDate: fromDate,
+                toDate: toDate,
+                userID: userID,
+                invoiceType: invoiceType,
+                invoiceStatus: invoiceStatus,
+                agentBranches: agentBranches,
+                cusName: cusName,
+                isFilter: true
+            }),
+            success: function (data) {
+                $("#squaresWaveG").hide();
+                $("#Invoice-data").html(data);
+            }
+        });
+    }
+</script>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <div class="form-group col-md-2">
+                    <label>Mã HĐ</label>
+                    <input type="text" id="txtInvoiceID" class="form-control" />
+                </div>
+
+                <div class="form-group col-md-2">
+                    <label>Số HĐ</label>
+                    <input type="text" id="txtInvoiceNo" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Số Vé</label>
+                    <input type="text" id="txtTicketNoSearch" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Ngày bán từ</label>
+                    <input type="text" id="txtFromDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Đến ngày</label>
+                    <input type="text" id="txtToDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>User</label>
+                    @Html.DropDownList("drpUserCreate", AirlineInvoice.Utils.DataComboSource.LoadUserDictionary("", true), new { @class = "form-control", id = "cboUser" })
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Loại</label>
+                    <select id="cboInvoiceType" class="form-control select2">
+                        <option value="0" selected title="Tất cả">Tất cả</option>
+                        <option value="1">Xuất</option>
+                        <option value="2">Hoàn</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Trạng thái</label>
+                    <select id="cboStatus" class="form-control select2">
+                        <option value="-1" selected title="Tất cả">Tất cả</option>
+                        <option value="@((int)AirlineInvoice.Utils.InvoiceStatus.Building)">Chưa xuất</option>
+                        <option value="@((int)AirlineInvoice.Utils.InvoiceStatus.Exported)">Đã xuất</option>
+                    </select>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Chi nhánh</label>
+                    <select id="cboagentBranches" class="form-control select2">
+                        <option value="-1" selected title="Tất cả">Tất cả</option>
+                        @if (TempData["ListAgenBranches"] != null)
+                        {
+                            foreach (var item in TempData["ListAgenBranches"] as List<AirlineInvoice.Models.AgentBranch>)
+                            {
+                                <option value="@((int)item.AgentBranchID)">@item.BranchName</option>
+                            }
+                        }
+
+                    </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Tên khách</label>
+                    <input type="text" id="txtCusName" class="form-control" />
+                </div>
+                <div class="form-group col-md-2 pull-right">
+                    <a onclick="gotoPage(1)" class="btn btn-md btn-info pull-right" href="javascript:void(0);"><i class="fa fa-search"></i>  Tìm kiếm</a>
+                </div>
+            </div>
+            <div class="box-header">
+                <h3 class="box-title">@ViewBag.Title</h3>
+                <div class="form-group col-md-2 pull-right">                    
+                    @Html.ActionLink("Thêm mới", "AddInvoice", null, new { @class = "btn btn-success pull-right" })
+                </div>
+
+                </div>
+
+            <div class="box-body">
+                <div id="Invoice-data">
+                    @Html.Partial("InvoiceData")
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

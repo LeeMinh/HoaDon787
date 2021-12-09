@@ -1,0 +1,56 @@
+﻿@model MembershipUserCollection
+@{
+    ViewBag.Title = "QUẢN TRỊ NGƯỜI DÙNG";
+}
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm("Bạn có muốn xóa user này không?");
+    }
+</script>
+<div class="col-xs-12">
+    <div class="box box-danger">
+        <div class="box-header">
+            <h3 class="box-title">@ViewBag.Title</h3>
+            @Html.ActionLink("Thêm mới", "Register", null, new { @class = "btn btn-success pull-right" })
+        </div>
+        <div class="box-body">
+            <div class="table-responsive">
+                <!-- Table -->
+                <table class="table table-striped table-bordered table-hover" id="tblPq">
+                    <thead>
+                        <tr>
+                            <th>Tên đăng nhập</th>
+                            <th>Họ và tên</th>
+                            <th>Chi nhánh</th>
+                            <th>Sửa</th>
+                            <th>Xóa</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tblUser">
+                        @if (Model != null && Model.Count > 0)
+                        {
+                            foreach (MembershipUser item in Model)
+                            {
+                            <tr>
+                                <td>@item.UserName</td>
+                                <td>@AirlineInvoice.Models.userprofile.GetUser(item.UserName).FullName</td>
+                                <td>@Html.DropDownList("drpBranch", AirlineInvoice.Utils.DataComboSource.LoadBranchDictionary(AirlineInvoice.Models.userprofile.GetUser(item.UserName).AgentBranchID, true), new { disabled = "disabled" })</td>
+                                <td align="center">
+                                    @Html.ActionLink(" ", "EditUser", new { userName = item.UserName }, new { @class = "btnAction btnEdit" })
+                                </td>
+                                <td align="center">@Html.ActionLink(" ", "DeleteUser", new { userName = item.UserName }, new { @class = "btnAction btnDelete", onclick = "return confirmDelete();" })</td>
+                            </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="3">Không có dữ liệu</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

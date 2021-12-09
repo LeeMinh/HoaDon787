@@ -1,0 +1,104 @@
+﻿@model List<AirlineInvoice.Models.InvoiceDetail>
+@{
+    System.Collections.Hashtable ticketTypeMap = new System.Collections.Hashtable(){
+    {(int)AirlineInvoice.Utils.TicketType.Dometic, "Vé nội địa"},
+        {(int)AirlineInvoice.Utils.TicketType.Changed, "chuyển"},
+        {(int)AirlineInvoice.Utils.TicketType.Global, "Vé quốc tế"},
+        {(int)AirlineInvoice.Utils.TicketType.Return, "Vé trả"}
+    };
+}
+<!-- DataTables -->
+<script src="/Content/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="/Content/plugins/datatables/dataTables.bootstrap.min.js"></script>
+<link rel="stylesheet" href="/Content/plugins/datatables/dataTables.bootstrap.css">
+<script type="text/javascript">
+    var lstTicket = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model))');
+    function SelectedTicket() {
+        var arrSelected = new Array();
+        $('.ticket-select:checked').each(function () {
+            for (var i = 0; i < lstTicket.length; i++) {
+                var ticketID = $(this).attr("ticket-id");
+                if (lstTicket[i].InvoiceDetailID == ticketID) {
+                    arrSelected.push(lstTicket[i]);
+                    break;
+                }
+            }
+        });
+        return arrSelected;
+    }
+
+</script>
+<style type="text/css">
+    div#tblPq_filter {
+float: right;
+}
+    div#search-ticket .box.box-danger {
+    margin-bottom: 0px;
+}
+</style>
+
+<table class="table table-striped table-bordered table-hover" id="tblPq">
+    <thead>
+        <tr>
+            <th style="width: 40px; text-align: center"><input type="checkbox" id="select_all_popup" /></th>
+            <th>Số vé</th>
+            <th>Loại vé</th>
+            <th>Hành trình</th>
+            <th>Ngày bán</th>
+            <th>Giá vé</th>
+            <th>VAT vé</th>
+            <th>Phí sân bay</th>
+        </tr>
+    </thead>
+    <tbody id="tblTicket">
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 40px; text-align: center">
+                        <input ticket-id="@item.InvoiceDetailID" type="checkbox" class="ticket-select" />
+                    </td>
+                    <td>@item.TicketNo</td>
+                    <td>@ticketTypeMap[item.TicketType]</td>
+                    <td>@item.TripCode</td>
+                    <td align="center">
+                        @string.Format("{0:dd/MM/yyyy}", item.SoldDate)
+                    </td>
+                    <td>@string.Format("{0:#,#}", item.TicketFare)</td>
+                    <td>
+                        @string.Format("{0:#,#}", item.TicketVAT)
+                    </td>
+                    <td>@string.Format("{0:#,#}", item.TicketTax)</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#select_all_popup").change(function () {
+            $(".ticket-select").prop("checked", $(this).prop("checked"));
+        });
+
+    });
+    $(function () {
+        $('#tblPq').DataTable({
+            "paging": false,
+            "lengthChange": false,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "order": [[5, "asc"]]
+        });
+    });
+</script>

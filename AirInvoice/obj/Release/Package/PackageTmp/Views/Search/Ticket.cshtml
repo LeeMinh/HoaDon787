@@ -1,0 +1,102 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#txtFromDate').datetimepicker({
+            mask: true,
+            timepicker: false,
+            format: 'd/m/Y'
+        });
+        $('#txtFromDate').val('@DateTime.Today.AddDays(-DateTime.Today.Day + 1).ToString("dd/MM/yyyy")');
+        $('#txtToDate').datetimepicker({
+            mask: true,
+            timepicker: false,
+            format: 'd/m/Y'
+        });
+        $('#txtToDate').val('@DateTime.Now.ToString("dd/MM/yyyy")');
+    });
+    function TicketSearch_gotoPage(currentPage, p) {
+        var pageSize = parseInt(p);
+        if (isNaN(pageSize) || pageSize == 0) pageSize = 20;
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetTicketData", "Search")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                currentPage: currentPage,
+                pageSize: pageSize,
+                invoiceType: parseInt('@ViewBag.InvoiceType'),
+                ticketNo: $("#txtSearchTicket").val(),
+                ticketType: parseInt($("#cboTicketType").val()),
+                fromDate: $("#txtFromDate").val(),
+                toDate: $("#txtToDate").val(),
+                tripCode: $("#txtTripCode").val()
+            }),
+            success: function (data) {
+                $("#ticket-data").html(data);
+            },
+            complete: function () {
+                $("#squaresWaveG").hide();
+            }
+        });
+    }
+
+</script>
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <div class="form-group col-md-2">
+                    <label>Ngày bán từ</label>
+                    <input type="text" id="txtFromDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Đến ngày</label>
+                    <input type="text" id="txtToDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Số vé</label>
+                    <input type="text" id="txtSearchTicket" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Loại vé</label>
+                    <select id="cboTicketType" class="form-control select2">
+                        @if (ViewBag.InvoiceType == (int)AirlineInvoice.Utils.InvoiceType.Normal)
+                        {
+                        <option value="0" selected title="Tất cả">Tất cả</option>                        
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Dometic)">Vé nội địa</option>
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Global)">Vé quốc tế</option>
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Changed)">Vé chuyển đổi</option>
+                        }
+                        else if (ViewBag.InvoiceType == (int)AirlineInvoice.Utils.InvoiceType.Return)
+                        {
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Return)">Vé hoàn trả</option>
+                        }
+                        else
+                        {
+                        <option value="0" selected title="Tất cả">Tất cả</option>                        
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Dometic)">Vé nội địa</option>
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Global)">Vé quốc tế</option>
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Changed)">Vé chuyển đổi</option>
+                        <option value="@((int)AirlineInvoice.Utils.TicketType.Return)">Vé hoàn trả</option>
+                        }
+                        
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Hành trình</label>
+                    <input type="text" id="txtTripCode" class="form-control" />
+                </div>
+                <div class="form-group col-md-1">
+                    <label>Tìm kiếm</label>
+                    <button onclick="TicketSearch_gotoPage(1)" class="btn btn-md btn-info"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="box-body">
+            <div id="ticket-data">
+                @Html.Partial("TicketData")
+            </div>
+        </div>
+    </div>
+</div>

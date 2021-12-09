@@ -1,0 +1,102 @@
+@model List<AirlineInvoice.Models.ExtNetChartModel>
+@{
+    ViewBag.Title = "Line Chart - Ext.NET MVC Examples";
+    var X = Html.X();
+}
+@Html.X().ResourceManager(ViewBag.ManagerConfig as MvcResourceManagerConfig)
+     <script>
+         var saveChart = function (btn) {
+             Ext.MessageBox.confirm('Confirm Download', 'Would you like to download the chart as an image?', function (choice) {
+                 if (choice == 'yes') {
+                     btn.up('panel').down('chart').save({
+                         type: 'image/png'
+                     });
+                 }
+             });
+         }
+    </script>
+
+    <h1>Line Chart Example</h1>
+
+	<p>Display 2 sets of random data in a line series. Reload data will randomly generate a new set of data in the store. Click on the legend items to remove them from the chart.</p>
+
+    @(X.Panel()
+        .Title("Line Chart")
+        .Layout(LayoutType.Fit)
+        .Width(800)
+        .Height(600)
+        .TopBar(X.Toolbar()
+            .Items(
+                X.Button()
+                    .Text("Reload Data")
+                    .Icon(Icon.ArrowRefresh)
+                    .Handler("#{Chart1}.getStore().reload()"),
+                X.Button()
+                    .Text("Save Chart")
+                    .Icon(Icon.Disk)
+                    .Handler("saveChart")
+            )
+        )
+        .Items(
+            X.Chart()
+                .ID("Chart1")
+                .StyleSpec("background:#fff;")
+                .Shadow(true)
+                .StandardTheme(StandardChartTheme.Category1)
+                .Animate(true)
+                .LegendConfig(X.ChartLegend().Position(LegendPosition.Right))
+                .Store(X.Store()
+                    .Data(Model)
+                    .Model(X.Model()
+                        .Fields(
+                            X.ModelField().Name("Name"),
+                            X.ModelField().Name("Data1"),
+                            X.ModelField().Name("Data2"),
+                            X.ModelField().Name("Data3")
+                        )
+                    )
+                    .Proxy(X.AjaxProxy()
+                        .Url(Url.Action("GetData"))
+                        .Reader(X.JsonReader().Root("data"))
+                    )
+                )
+                .Axes(
+                    X.NumericAxis()
+                        .Fields(new [] { "Data1", "Data2", "Data3" })
+                        .Title("Number of Hits")
+                        .MinorTickSteps(1)
+                        .Minimum(0)
+                        .GridConfig(X.AxisGrid()
+                            .Odd(new SpriteAttributes { Opacity = 1, Fill = "#ddd", Stroke = "#bbb", StrokeWidth = 0.5 })
+                        ),
+                    X.CategoryAxis()
+                        .Position(Position.Bottom)
+                        .Fields("Name")
+                        .Title("Month of the Year")
+                )
+                .Series(
+                    X.LineSeries()
+                        .Axis(Position.Left)
+                        .XField("Name")
+                        .YField("Data1")
+                        .HighlightConfig(new SpriteAttributes { Size = 7, Radius = 7 })
+                        .MarkerConfig(new SpriteAttributes { Type = SpriteType.Cross, Size = 4, Radius = 4, StrokeWidth = 0 }),
+                    
+                    X.LineSeries()
+                        .Axis(Position.Left)
+                        .Smooth(3)
+                        .XField("Name")
+                        .YField("Data2")
+                        .HighlightConfig(new SpriteAttributes { Size = 7, Radius = 7 })
+                        .MarkerConfig(new SpriteAttributes { Type = SpriteType.Circle, Size = 4, Radius = 4, StrokeWidth = 0 }),
+                    
+                    X.LineSeries()
+                        .Axis(Position.Left)
+                        .Smooth(3)
+                        .XField("Name")
+                        .YField("Data3")
+                        .HighlightConfig(new SpriteAttributes { Size = 7, Radius = 7 })
+                        .MarkerConfig(new SpriteAttributes { Type = SpriteType.Circle, Size = 4, Radius = 4, StrokeWidth = 0 })
+                )
+        )
+    )

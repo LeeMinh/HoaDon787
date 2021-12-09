@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "DANH SÁCH PHÒNG ĐÃ THUÊ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model AirlineInvoice.Models.TransactionModel
+<script type="text/javascript">
+   
+</script>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div id="lblError" style="color: red; display: none;"></div>
+    <div class="row">
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @Html.ActionLink("Thông tin chung", "EditTransaction", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+             @Html.ActionLink("Phòng đã thuê (" + Model.TransactionRooms.Count + ")", "TransactionRoom", new { TransactionID =  AirlineInvoice.Utils.CommonFunction.Shrink( Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            @Html.ActionLink("Danh sách khách (" + Model.CustomerCount + ")", "TransactionCustomer", new { TransactionID =  AirlineInvoice.Utils.CommonFunction.Shrink( Model.Transaction.TransactionID) }, new { @class = "btn btn-white" })
+        </div>
+        <div class="col-md-3 col-lg-3 col-xs-3 step">
+            <a href="#" class="btn btn-primary">@("Dịch vụ sử dụng (" + Model.ServiceCount + ")")</a>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5 id="form-title">@ViewBag.Title</h5>
+                </div>
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-12 col-md-12">
+                                @Html.ActionLink("Thêm dịch vụ", "AddService", new { TransID  = AirlineInvoice.Utils.CommonFunction.Shrink(Model.Transaction.TransactionID)}, new { @class="btn btn-white" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-md-12">
+                                <div class="table-responsive" id="transaction-service">
+                                    @Html.Partial("TransactionServiceData", Model)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

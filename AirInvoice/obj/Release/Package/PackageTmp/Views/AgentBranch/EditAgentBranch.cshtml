@@ -1,0 +1,120 @@
+﻿@model AirlineInvoice.Models.AgentBranch
+@{
+    ViewBag.Title = "SỬA THÔNG TIN CHI NHÁNH";
+}
+<script src="@Url.Content("~/ckeditor/ckeditor.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#hdAgentID").val(@AirlineInvoice.Models.userprofile.CurrentUser.AgentID);
+        CKEDITOR.replace('HeaderInvoice');
+    });
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-bold text-black">@ViewBag.Title</h3>
+            </div>
+            <div class="box-body">
+                @using (Html.BeginForm("EditAgentBranch", "AgentBranch", FormMethod.Post, new { autocomplete = "off", @class = "form-horizontal" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    @Html.HiddenFor(x => x.AgentBranchID)
+                    @Html.HiddenFor(x => x.AgentID, new { id = "hdAgentID" })
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Tên chi nhánh</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.BranchName, new { @class = "form-control", id = "txtName", autocomplete = "off" })
+                            @Html.ValidationMessageFor(m => m.BranchName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Địa chỉ</label>
+                        <div class="col-sm-10">
+                            @Html.TextAreaFor(m => m.Address, new { @class = "form-control", id = "txtAddress" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Điện thoại</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Tel, new { @class = "form-control", id = "txtTel" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Mã số thuế</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Tax, new { @class = "form-control", id = "txtTax" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Tài khoản</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.BankAcc, new { @class = "form-control", id = "txtBankAcc" })
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label box-title text-bold text-blue">Dải hóa đơn</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" title="Số bắt đầu dải hóa đơn xuất">Dải xuất từ</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.InvoiceStartNumber, new { @class = "form-control", id = "txtInvoiceStartNumber", type="number" })
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" title="Số kết thúc dải hóa đơn">Dải xuất đến</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.InvoiceEndNumber, new { @class = "form-control", id = "txtInvoiceEndNumber", type="number" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" title="Số bắt đầu dải hóa đơn">Dải hoàn từ</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.InvoiceReturnStart, new { @class = "form-control", id = "txtInvoiceReturnStart", type="number" })
+                        </div>
+                    </div> 
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" title="Số kết thúc dải hóa đơn">Dải hoàn đến</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(x => x.InvoiceReturnEnd, new { @class = "form-control", id = "txtInvoiceReturnEnd", type="number" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Mẫu số HĐ xuất</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.FormNo, new { @class = "form-control", id = "txtFormNo", @name = "HeaderInvoice" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Ký hiệu HĐ xuất</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.Serial, new { @class = "form-control", id = "txtSerial", @name = "HeaderInvoice" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Mẫu số HĐ hoàn</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.FormNoReturn, new { @class = "form-control", id = "txtFormNoReturn", @name = "HeaderInvoice" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Ký hiệu HĐ hoàn</label>
+                        <div class="col-sm-10">
+                            @Html.TextBoxFor(m => m.SerialReturn, new { @class = "form-control", id = "txtSerialReturn", @name = "HeaderInvoice" })
+                        </div>
+                    </div>
+                    <div class="hr-line-dashed"></div>
+                    <div class="form-group">
+                        <div class="col-sm-4 col-sm-offset-2">
+                            <a class="btn btn-white" href="@Url.Action("Index")">Hủy</a>
+                            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

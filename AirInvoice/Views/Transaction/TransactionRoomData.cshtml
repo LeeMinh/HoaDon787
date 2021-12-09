@@ -1,0 +1,75 @@
+﻿@model AirlineInvoice.Models.TransactionModel
+<script type="text/javascript">
+    function confirmDeleteRoom(id) {
+        ShowConfirmButton("Bạn có muốn xóa phòng khỏi danh sách?", function () {
+            var url = '@Url.Action("DeleteTransactionRoom", new { id = "aaa" })';
+            window.location = url.replace("aaa", id);
+        });
+    }
+
+    function ShowTransactionRoomCustomer(id) {
+        $("#squaresWaveG").show();
+        $.ajax({
+            url: "@Url.Action("GetTransactionRoomCustomer")",
+            type: "POST",
+            data: { TransactionRoomID: id },
+            success: function (data) {
+                ShowWarning(data);
+            },
+            complete: function () {
+                $("#squaresWaveG").hide();
+            }
+        });
+    }
+</script>
+<table class="table table-striped table-bordered table-hover" id="tblPq">
+    <thead>
+        <tr>
+            <th>Số phòng</th>
+            <th>Tầng</th>
+            <th>Hình thức thuê</th>
+            <th>Giá</th>
+            <th>Giờ vào</th>
+            <th>Giờ kết thúc</th>
+            <th>Khách hàng</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody id="tblRoom">
+        @if (Model != null && Model.TransactionRooms.Count > 0)
+        {
+            foreach (var item in Model.TransactionRooms)
+            {
+            <tr id="room-@item.RoomID">
+                <td>@item.RoomCode</td>
+                <td>@item.Floor</td>
+                <td>@AirlineInvoice.Utils.CommonFunction.GetRentTypeName(item.RentType)</td>
+                <td align="right">@string.Format("{0:#,#}", item.Price)</td>
+                <td align="center">@string.Format("{0:yyyy-MM-dd HH:mm}", item.StartTime)</td>
+                <td align="center">@string.Format("{0:yyyy-MM-dd HH:mm}", item.EndTime)</td>
+                <td><a href="javascript:void(0);" onclick="ShowTransactionRoomCustomer('@AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionRoomID)');" class="btn btn-xs btn-info fa fa-edit">&nbsp;Xem</a></td>
+                <td align="center">
+                    @if(!item.IsCheckout)
+                    {
+                    @Html.ActionLink(" ", "EditRoom", new {id=AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionRoomID)}, new {@class="btnAction btnEdit"})
+                    }
+                </td>
+                <td align="center">
+                    @if (!item.IsCheckout)
+                    {
+                        <a href="javascript:void(0);" onclick="confirmDeleteRoom('@AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionRoomID)')" class = "btnAction btnDelete">&nbsp;</a> 
+                    }
+                </td>
+                    
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>

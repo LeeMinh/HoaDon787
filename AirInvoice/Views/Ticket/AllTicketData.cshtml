@@ -1,0 +1,78 @@
+﻿@model List<AirlineInvoice.Models.InvoiceDetail>
+
+<script>
+    $(document).ready(function () {
+        $(".deleteTicket").click(function () {
+            if (confirm("Bạn có chắc chắn muốn xóa số vé này?") == true) {
+                var id = this.id;
+                $.ajax({
+                    url: "/Invoice/deleteTicket",
+                    type: "post",
+                    dataType: "text",
+                    data: {
+                        InvoiceDetailID: id
+                    },
+                    success: function (data) {
+                        if (data == "OK") {
+                            alert("Xóa số vé thành công");
+                            window.location.reload();
+                        }
+                    }
+                });
+            } else {
+                return false;
+            }
+            
+        });
+        
+    });
+</script>
+<table class="table table-bordered table-striped" id="tblTicket">
+    <thead>
+        <tr>
+            <th>Số vé</th>
+            <th>Ngày bán</th>
+            <th>VCR</th>
+            <th>Số hóa đơn</th>
+            <th>Mã đặt vé</th>
+            <th>Giá vé</th>
+            <th>VAT</th>
+            <th>Thuế phí</th>
+            <th>Tổng giá</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TicketNo</td>
+                    <td>@string.Format("{0:dd/MM/yyyy}", item.SoldDate)</td>
+                    <td>
+                        <a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceDetailID)')">
+                            <i class="fa fa-info-circle"></i>
+                        </a>
+                    </td>
+                    <td>@item.InvoiceNumber</td>
+                    <td>@item.PNRCode</td>
+                    <td>@string.Format("{0:#,#}", item.TicketFare)</td>
+                    <td>
+                        @string.Format("{0:#,#}", item.TicketVAT)
+                    </td>
+                    <td>@string.Format("{0:#,#}", item.TicketTax)</td>
+                    <td>@string.Format("{0:#,#}", item.TicketPrice)</td>
+                    <td><a id="@item.InvoiceDetailID" class="deleteTicket"><i class="fa fa-trash" aria-hidden="true"></i></a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")

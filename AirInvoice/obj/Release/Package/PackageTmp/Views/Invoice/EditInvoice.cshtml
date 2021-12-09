@@ -1,0 +1,638 @@
+﻿@model AirlineInvoice.Models.Invoice
+
+@{
+    ViewBag.Title = "THÔNG TIN CHI TIẾT HÓA ĐƠN";
+    var isAccounting = Roles.IsUserInRole(AirlineInvoice.Utils.CommonFunction._Accounting)
+        && !Roles.IsUserInRole(AirlineInvoice.Utils.CommonFunction._AdminRole);
+}
+@*<link href="~/Content/jquery-ui.css" rel="stylesheet" />*@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript">
+    var details = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.InvoiceDetails).Replace("\r", "").Replace("\n", ""))');
+    $(document).ready(function () {
+        document.getElementById('myModal').click();
+        $('#txtInvoiceDate').val('@Model.InvoiceDate.ToString("dd/MM/yyyy")');
+        if ('@Model.InvoiceStatus' == '@((int)AirlineInvoice.Utils.InvoiceStatus.Exported)') {
+            setTimeout(function () {
+                $("input").attr("readonly", "true");
+                $("#txtBranch").attr("disabled", "disabled");
+                $("#txtCustomerAddress").attr("disabled", "disabled");
+            }, 500);
+            $("#tblInvoiceDetail th:first-child").remove();
+            $("#tblInvoiceDetail td:first-child").remove();
+        }
+        else {
+            $('#txtInvoiceDate').datetimepicker({
+                mask: true,
+                timepicker: false,
+                format: 'd/m/Y'
+            });
+        }
+        $("#hdAgentID").val(@AirlineInvoice.Models.userprofile.CurrentUser.AgentID);
+        $("#btnPrintDetail").css('cursor', details.length <= 3 ? "not-allowed" : "default");
+        //iCheck for checkbox and radio inputs
+        var copy = parseInt('@Model.PrintCopy');
+        if ('@Model.InvoiceStatus.Value' != '@((int)AirlineInvoice.Utils.InvoiceStatus.Exported)') {
+            printInvoice('@Model.ActionMode', copy);
+        }
+        txtTotalAgentFee_Blur();
+    });
+    function printInvoice(action, copy) {
+        // in hoa don
+        if (action == '@((int)AirlineInvoice.Utils.InvoiceAction.PrintInvoice)'
+            || action == '@((int)AirlineInvoice.Utils.InvoiceAction.PrintInvoiceDetail)') {
+            var id = '@AirlineInvoice.Utils.CommonFunction.Shrink(Model.InvoiceID)';
+            var url = '@Html.Raw(Url.Action("ViewReport", new { invoiceid= "aaa", reportcopy="bbb", PrintAction = "ccc"}))';
+            url = url.replace("aaa", id);
+            url = url.replace("bbb", copy);
+            url = url.replace("ccc", action);
+            popupwindow(url);
+        }
+    }
+    function popupwindow(url) {
+        return window.open(url, "_blank");
+    }
+    function confirmDelete(id) {
+        ShowConfirmButton("Bạn có muốn loại bỏ vé này không?", function () {
+            $("#detail-" + id).remove();
+            for (var i = 0; i < details.length; i++) {
+                if (details[i].InvoiceDetailID == id) {
+                    details.splice(i, 1);
+                    $("#btnPrintDetail").css('cursor', details.length <= 3 ? "not-allowed" : "default");
+                    break;
+                }
+            }
+        });
+    }
+    function confirmDeletemulti(listId) {
+        ShowConfirmButton("Bạn có muốn loại bỏ các số vé này không?", function () {
+
+            for (var i = 0; i < listId.length; i++) {
+                $("#detail-" + listId[i]).remove();
+            }
+            for (var i = 0; i < listId.length; i++) {
+                for (var j = 0; j < details.length; j++) {
+                    if (details[j].InvoiceDetailID == listId[i]) {
+                        details.splice(j, 1);
+
+                    }
+                }
+                $("#btnPrintDetail").css('cursor', details.length <= 3 ? "not-allowed" : "default");
+            }
+        });
+    }
+
+    function doAddTicket(ticketNo) {
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetInvoiceDetail")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                ticketNo: ticketNo,
+                invoiceType: parseInt('@Model.InvoiceType')
+            }),
+            success: function (data) {
+                if (data.status == "ok") {
+                    var isExists = false;
+                    for (var i = 0; i < details.length; i++) {
+                        if (details[i].InvoiceDetailID == data.id) {
+                            $("#squaresWaveG").hide();
+                            ShowWarning("Vé đã được chọn.");
+                            isExists = true;
+                            break;
+
+                        }
+                        $("#squaresWaveG").hide();
+                    }
+                    if (isExists == false) {
+                        $("#squaresWaveG").hide();
+                        $("#detail-empty").remove();
+                        $("#tblInvoice").append(data.result);
+                        details.push(JSON.parse(data.jsontext));
+                        $("#txtTicketNo").val('')
+                        $("#btnPrintDetail").css('cursor', details.length <= 3 ? "not-allowed" : "default");
+                        //ShowVCR(data.id);
+                    }
+                    $("#squaresWaveG").hide();
+                }
+                else {
+                    $("#squaresWaveG").hide();
+                    ShowWarning(data.message);
+                }
+            }
+        });
+    }
+    function addTicket() {
+        $("#squaresWaveG").show("slow");
+        var ticketNo = $("#txtTicketNo").val().trim();
+        if (ticketNo.length <= 13) {
+            var currentCount = details.length;
+            doAddTicket(ticketNo);
+            if (details.length != currentCount) {
+                ShowVCR(details[details.length - 1].InvoiceDetailID, true);
+                $("#squaresWaveG").hide();
+            }
+        }
+        else if (ticketNo.length <= 17) {
+            var stringlist = ticketNo.split("-");
+            var startnum = parseInt(stringlist[0]);
+            var endstring = stringlist[1];
+            var endnum = parseInt(startnum.toString().substr(0, 10) + endstring);
+            for (var i = 0; i <= (endnum - startnum) ; i++) {
+                var currentCount = details.length;
+                doAddTicket((startnum + i).toString());
+                if (details.length != currentCount) {
+                    ShowVCR(details[details.length - 1].InvoiceDetailID, true);
+                    $("#squaresWaveG").hide();
+                }
+            }
+        }
+        else {
+            var listticket = ticketNo.split(",");
+            for (var i = 0; i < listticket.length; i++) {
+                var currentCount = details.length;
+                doAddTicket((listticket[i]).toString());
+                if (details.length != currentCount) {
+                    ShowVCR(details[details.length - 1].InvoiceDetailID, true);
+                    $("#squaresWaveG").hide();
+                }
+                $("#squaresWaveG").hide();
+            }
+        }
+        $("#squaresWaveG").hide();
+    }
+    function CreateEInvoices() {
+        $("#squaresWaveG").show("slow");
+        $('.loader').show();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("CreateReportEInvoice")',
+            data: {
+                InvoiceId: '@Model.InvoiceID'
+            },
+            success: function (data) {
+                ShowSuccess(data);  
+            }
+        });
+        $("#squaresWaveG").hide();      $('.loader').hide();
+    }
+    function CreateEInvoicesONFINANCE() {
+        $("#squaresWaveG").show("slow");
+        $('.loader').show();
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("PostCreateListInvoice")',
+            data: {
+                InvoiceId: '@Model.InvoiceID'
+            },
+            success: function (data) {
+                ShowSuccess(data);  
+            }
+        });
+        $("#squaresWaveG").hide();      $('.loader').hide();
+    }
+    function doSave(action) {
+        //alert($("#txtCustomerAddress").val());
+        $("#hdAction").val(action);
+        $("#hdDetails").val(JSON.stringify(details));
+        if (action == '@((int)AirlineInvoice.Utils.InvoiceAction.ExportInvoice)') {
+            ShowConfirmButton("Bạn có thực sự chắc chắn xuất hóa đơn này không?", function () {
+                 document.getElementById("form-invoice").submit();
+                $("#squaresWaveG").hide();
+            });
+        }
+        else if (action == '@((int)AirlineInvoice.Utils.InvoiceAction.CancelExport)') {
+            ShowConfirmButton("Bạn có thực sự chắc chắn hủy xuất hóa đơn này không?", function () {
+                document.getElementById("form-invoice").submit();
+                $("#squaresWaveG").hide();
+            });
+        }
+        else if (action == '@((int)AirlineInvoice.Utils.InvoiceAction.PrintEInvoice)') {
+            ShowConfirmButton("Bạn đang thực hiện chức năng xuất vé điện tử. </br>Bạn có thực sự chắc chắn xuất hóa đơn này không?", function () {
+                var radio = $('input:radio[name=eInvoice]:checked');
+                if (radio.val() == 1) {
+                    CreateEInvoices();
+                } else {
+                    CreateEInvoicesONFINANCE();
+                }
+                $("#squaresWaveG").hide();
+            });
+        }
+        else {
+            document.getElementById("form-invoice").submit();
+            $("#squaresWaveG").hide();
+        }
+    }
+    function cancelSave(action) {
+        $("#hdAction").val(action);
+        $("#hdDetails").val(JSON.stringify(details));
+        if (action == '@((int)AirlineInvoice.Utils.InvoiceAction.CancelExport)') {
+            ShowConfirmButton("Bạn có thực sự chắc chắn hủy xuất hóa đơn này không?", function () {
+                document.getElementById("form-invoice").submit();
+                $("#squaresWaveG").hide();
+            });
+        }
+        else {
+            document.getElementById("form-invoice").submit();
+            $("#squaresWaveG").hide();
+        }
+    }
+    function txtTotalAgentFee_Blur() {
+        var agentFee = parseInt($("#txtTotalAgentFee").val());
+        if (agentFee != null && !isNaN(agentFee)) {
+            $("#lblAgentFeeVAT").html((parseInt(agentFee / 11)).toString());
+        }
+    }
+
+    function SubmitPrint() {
+        var radio = $('input:radio[name=copy]:checked');
+        if (radio != null) {
+            if ('@((int)AirlineInvoice.Utils.InvoiceStatus.Building)' == '@Model.InvoiceStatus') {
+                if (details.length <= 3 && $("#hdAction").val() == '@((int)AirlineInvoice.Utils.InvoiceAction.PrintInvoiceDetail)') {
+
+                }
+                else {
+                    $("#hdPrintCopy").val(radio.val());
+                    doSave($("#hdAction").val());
+                }
+            }
+            else {
+                printInvoice($("#hdAction").val(), radio.val());
+            }
+        }
+    }
+    function ShowVCR(detailID, showDefault) {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetVCR")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                InvoiceDetailID: detailID
+            }),
+            success: function (data) {
+                if (showDefault == true) {
+                    $("#lblVCR").val(data.result);
+                    $("#vcr-display").show();
+                    //}
+                }
+                else {
+                    ShowWarning(data.result);
+                }
+                //if (data.updatesystem == 1) {
+                //}
+                //else {
+                //$("#lblVCR").val(data.result);
+                //    $("#vcr-display").show();
+                ////}
+            }
+        });
+    }
+
+    function SubmitSelectMulti() {
+        $("#squaresWaveG").show("slow");
+        var lstSelected = SelectedTicket();
+        for (var i = 0; i < lstSelected.length; i++) {
+            var isExists = false;
+            for (var j = 0; j < details.length; j++) {
+                if (lstSelected[i].InvoiceDetailID == details[j].InvoiceDetailID) {
+                    isExists = true;
+                    break;
+                }
+            }
+            if (!isExists) {
+                doAddTicket(lstSelected[i].TicketNo);
+            }
+        }
+
+        $("#squaresWaveG").hide();
+    }
+
+    $(function () {
+
+        $("#txtCustomerName").autocomplete({
+            minLength: 0,
+            source: '@Url.Action("TagSearch", "Invoice")',
+            focus: function (event, ui) {
+                $("#txtCustomerName").val(ui.item.CustomerName);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#txtCustomerName").val(ui.item.CustomerName);
+                $("#txtAgentTaxCode").val(ui.item.CustomerTax);
+                $("#txtCustomerAddress").val(ui.item.CustomerAddress);
+
+                return false;
+            }
+        })
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+              .append("<a>" + item.CustomerName + "</a>")
+              .appendTo(ul);
+        };
+    });
+
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-bold text-black">@ViewBag.Title&nbsp;@(Model.InvoiceType == 2 ? " - HÓA ĐƠN HOÀN" : "")</h3>
+            </div>
+            @using (Html.BeginForm("EditInvoice", "Invoice", FormMethod.Post, new { autocomplete = "off", id = "form-invoice" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary()
+                @Html.HiddenFor(x => x.InvoiceID, new { id = "hdInvoiceID" })
+                @Html.HiddenFor(x => x.AgentID, new { id = "hdAgentID" })
+                @Html.HiddenFor(x => x.ActionMode, new { id = "hdAction" })
+                @Html.HiddenFor(x => x.InvoiceDetailJson, new { id = "hdDetails" })
+                @Html.HiddenFor(x => x.InvoiceStatus)
+                @Html.HiddenFor(x => x.PrintCopy, new { id = "hdPrintCopy" })
+                @Html.HiddenFor(x => x.InvoiceType, new { id = "hdInvoiceType" })
+                @Html.HiddenFor(x => x.UserCreate, new { id = "hdUserCreate" })
+        <div class="box-body">
+            <div class="form-group col-md-3">
+                <label>Số hóa đơn</label>
+                @Html.TextBoxFor(m => m.InvoiceNumber, new { @class = "form-control", id = "txtInvoiceNumber", @readonly = "readonly", autocomplete = "off" })
+                @Html.ValidationMessageFor(m => m.InvoiceNumber)
+            </div>
+            <div class="form-group col-md-6">
+                <label>Chi nhánh</label>
+                @if (AirlineInvoice.Utils.CommonFunction.CheckAgentUserPermission() || Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Building)
+                {
+                    @Html.DropDownListFor(m => m.AgentBranchID, AirlineInvoice.Utils.DataComboSource.LoadBranchDictionary(), new { @class = "form-control", id = "txtBranch" })
+                }
+                else
+                {
+                    @Html.DropDownList("drpBranch", AirlineInvoice.Utils.DataComboSource.LoadBranchDictionary(Model.AgentBranchID, true), new { @class = "form-control", id = "txtBranch", @disabled = "disabled" })
+                    @Html.HiddenFor(x => x.AgentBranchID);
+                }
+
+            </div>
+            <div class="form-group col-md-3">
+                <label>Ngày hóa đơn</label>
+                @Html.TextBoxFor(m => m.InvoiceDate, "dd/MM/yyyy", new { @class = "form-control", id = "txtInvoiceDate", autocomplete = "off" })
+            </div>
+            <div class="form-group col-md-9">
+                <label>Tên khách hàng</label>
+                @Html.TextBoxFor(m => m.Buyer, new { @class = "form-control", id = "Buyer", name = "Buyer" })
+            </div>
+            <div class="form-group col-md-3">
+                <label>Email</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "Email", name = "Email" })
+            </div>
+            <div class="form-group col-md-9">
+                <label>Tên đơn vị</label>
+                @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", id = "txtCustomerName" })
+            </div>
+            <div class="form-group col-md-3">
+                <label>Mã số thuế</label>
+                @Html.TextBoxFor(m => m.CustomerTax, new { @class = "form-control", id = "txtAgentTaxCode" })
+            </div>
+            <div class="form-group col-md-12">
+                <label>Địa chỉ</label>
+                @Html.TextBoxFor(m => m.CustomerAddress, new { @class = "form-control", id = "txtCustomerAddress" })
+            </div>
+            <div class="form-group col-md-12">
+                <label>Hình thức thanh toán</label>
+                @if (Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Building)
+                {
+                    @Html.DropDownListFor(m => m.PaymentType, AirlineInvoice.Utils.DataComboSource.PaymentTypeList(), new { @class = "form-control", id = "drpPaymentType" })
+                }
+                else
+                {
+                    @Html.DropDownListFor(m => m.PaymentType, AirlineInvoice.Utils.DataComboSource.PaymentTypeList(), new { @class = "form-control", id = "drpPaymentType", @disabled = "disabled" })
+                    @Html.HiddenFor(x => x.PaymentType);
+                }
+
+            </div>
+        </div>
+
+                <div class="box-header with-border">
+                    <h3 class="box-title text-bold text-blue">Thông tin chi tiết hóa đơn</h3>
+                </div>
+                <div class="box-body">
+                    @if (Model.InvoiceStatus != 1)
+                    {
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <input type="text" id="txtTicketNo" class="form-control" />
+                            </div>
+                            <div class="col-sm-3">
+                                <input type="button" @(Model.InvoiceStatus == 1 ? "disabled" : string.Empty) value="Thêm vé" class="btn btn-info btn-sm left" onclick="addTicket();" />
+                            </div>
+                            @if (!isAccounting)
+                            {
+                                <div class="col-sm-3" style="">
+                                    <a href="#" class="btn btn-success btn-sm " data-toggle="modal" data-target="#search-ticket">Thêm nhiều vé</a>
+                                </div>
+                            }
+
+                            
+
+                        </div>
+                    }
+                    <div class="form-group" id="vcr-display" style="display: none;">
+                        <textarea class="col-sm-12 form-control" style="background-color:#fbde99; height: 80px;" id="lblVCR"></textarea>
+                    </div>
+
+                    <br />
+                    <br />
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                @Html.Partial("InvoiceDetailData", Model.InvoiceDetails)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label style="color:blue; text-align: right;" class="col-sm-10 control-label">VAT phí xuất vé</label>
+                            <div class="col-sm-2" style="text-align: right;">
+                                <label id="lblAgentFeeVAT">0</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-10 control-label" style="text-align: right;">Tổng phí xuất vé</label>
+                            <div class="col-sm-2">
+                                @Html.TextBoxFor(m => m.TotalAgentFee, new { @style = "text-align: right;", @class = "form-control form-control-sm money", id = "txtTotalAgentFee", onKeyUp = "txtTotalAgentFee_Blur();" })
+                            </div>
+                        </div>
+
+                        <div class="box-footer">
+                            <div class="form-group">
+                                <div class="col-sm-1">
+                                    <a class="btn btn-white btn-sm" href="@Url.Action("Index")">Quay lại</a>
+                                </div>
+                                <div class="col-sm-1">
+                                    <button class="btn btn-primary btn-sm" @(Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Exported ? "disabled" : "")
+                                            onclick="doSave('@((int)AirlineInvoice.Utils.InvoiceAction.Update)');">
+                                        Cập nhật
+                                    </button>
+                                </div>
+                                <div class="col-sm-1">
+                                    <a class="btn btn-success btn-sm" onclick="$('#hdAction').val('@((int)AirlineInvoice.Utils.InvoiceAction.PrintInvoice)');" href="javascript:void(0);" data-toggle="modal" data-target="#myModal">In hóa đơn</a>
+                                </div>
+                                <div class="col-sm-1">
+                                    <a id="btnPrintDetail" href="#" class="btn btn-info btn-sm" data-toggle="modal"    
+                                       onclick="$('#hdAction').val('@((int)AirlineInvoice.Utils.InvoiceAction.PrintInvoiceDetail)');"
+                                       data-target="#myModal">In bảng kê</a>
+                                </div>
+
+                                @if (!Roles.IsUserInRole(AirlineInvoice.Models.userprofile.CurrentUser.UserName, AirlineInvoice.Utils.CommonFunction._Accounting)
+                                 && Roles.IsUserInRole(AirlineInvoice.Models.userprofile.CurrentUser.UserName, AirlineInvoice.Utils.CommonFunction._AdminRole)
+                                 && AirlineInvoice.Models.userprofile.CurrentUser.AgentBranchID == 0)
+                                {
+                                    <div class="col-sm-2">
+                                        @if (Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Exported)
+                                        {
+                                            <button type="button" class="btn btn-sm btn-warning" disabled>
+                                                Hóa đơn đã xuất
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            if (Model.EInvoiceNumber == null || Model.EInvoiceNumber == "")
+                                            {
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                        onclick="doSave('@((int)AirlineInvoice.Utils.InvoiceAction.ExportInvoice)');">
+                                                    Xuất hóa đơn
+                                                </button>
+                                            }
+                                        }
+
+                                    </div>
+                                }
+                                
+                                @{
+                                    var currentUser = AirlineInvoice.Models.userprofile.CurrentUser;
+                                    string display = "";
+                                    if (currentUser.AgentBranchID == 0 || currentUser.FullName == "TRAN THI THU" || currentUser.UserName == "HONGTRINH" || currentUser.UserName == "hongtrinh")
+                                    {
+                                        display = "block";
+                                    }
+                                    else
+                                    {
+                                        display = "none";
+                                    }
+                                }
+                                <div class="col-sm-2" style="display:@display;">
+                                    @if (Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Building)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-warning" disabled>
+                                            Hóa đơn chưa xuất
+                                        </button>
+                                    }
+                                    else if ((Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Exported && (Model.EInvoiceNumber == "" || Model.EInvoiceNumber == null)) || (Membership.GetUser().UserName.Trim().ToUpper() == "JJZ"))
+                                    {
+                                        <button type="button" class="btn btn-sm btn-warning"
+                                                onclick="doSave('@((int)AirlineInvoice.Utils.InvoiceAction.CancelExport)');">
+                                            Hủy xuất hóa đơn
+                                        </button>
+                                    }
+                                </div>
+                                <div class="col-sm-2" style="display:@display;">
+                                    @if (Model.EInvoiceNumber != null && Model.EInvoiceNumber != "")
+                                    {
+                                        <button type="button" class="btn btn-sm btn-success" disabled>
+                                            Đã cập nhật trên hóa đơn điện tử
+                                        </button>
+                                    }
+                                    else if (Model.InvoiceStatus == (int)AirlineInvoice.Utils.InvoiceStatus.Building)
+                                    {
+                                        <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#ModalEInvoice"
+                                                @*onclick="doSave('@((int)AirlineInvoice.Utils.InvoiceAction.PrintEInvoice)');"*@>
+                                            Xuất hóa đơn điện tử
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">In hóa đơn</h4>
+            </div>
+            <div class="modal-body">
+                <!-- radio -->
+                <div>
+                    <div class="iradio_minimal-blue checked">
+                        <input id="rdCopy1" type="radio" name="copy" value="1" checked="checked" />
+                        <ins class="iCheck-helper">Liên 1</ins>
+                    </div>
+                </div>
+                <div>
+                    <div class="iradio_minimal-blue checked">
+                        <input id="rdCopy2" type="radio" name="copy" value="2" />
+                        <ins class="iCheck-helper">Liên 2</ins>
+                    </div>
+                </div>
+                <div>
+                    <div class="iradio_minimal-blue checked">
+                        <input id="rdCopy3" type="radio" name="copy" value="3" />
+                        <ins class="iCheck-helper">Liên 3</ins>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="fa fa-check btn btn-primary" data-dismiss="modal" onclick="SubmitPrint();">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="ModalEInvoice" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chọn cổng xuất hóa đơn</h4>
+            </div>
+            <div class="modal-body">
+                <!-- radio -->
+                <div>
+                    <div class="iradio_minimal-blue checked">
+                        <input id="eInvoiceVNPT" type="radio" name="eInvoice" value="1" checked="checked" />
+                        <ins class="iCheck-helper" for="eInvoiceVNPT">VNPT</ins>
+                    </div>
+                </div>
+                <div>
+                    <div class="iradio_minimal-blue checked">
+                        <input id="eInvoiceONFINANCE" type="radio" name="eInvoice" value="2" />
+                        <ins class="iCheck-helper" for="eInvoiceONFINANCE">ONFINANCE</ins>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="fa fa-check btn btn-primary" data-dismiss="modal" onclick="doSave('@((int)AirlineInvoice.Utils.InvoiceAction.PrintEInvoice)');">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal modal-wide fade" id="search-ticket" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Tìm kiếm vé chưa xuất</h4>
+            </div>
+            <div class="modal-body">
+                @{
+                    Html.RenderAction("Ticket", "Search", new { invoiceType = Model.InvoiceType });
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="fa fa-check btn btn-primary" data-dismiss="modal" onclick="SubmitSelectMulti();">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+</div>

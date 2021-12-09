@@ -1,0 +1,114 @@
+﻿@model AirlineInvoice.Models.Invoice
+@{
+    ViewBag.Title = "THÊM MỚI HÓA ĐƠN";
+}
+@*<link href="~/Content/jquery-ui.css" rel="stylesheet" />*@
+<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#hdAgentID").val(@AirlineInvoice.Models.userprofile.CurrentUser.AgentID);
+                
+    });
+    $(function () {
+        $('#txtInvoiceDate').datetimepicker({
+            mask: true,
+            format: 'd/m/Y',
+            time: false
+        });
+        $('#txtInvoiceDate').val('@Model.InvoiceDate.ToString("dd/MM/yyyy")');
+    });
+   
+    $(function () {
+        
+        $("#txtCustomerName").autocomplete({
+            minLength: 0,
+            source:'@Url.Action("TagSearch", "Invoice")',
+            focus: function (event, ui) {
+                $("#txtCustomerName").val(ui.item.CustomerName);
+                return false;
+            },
+            select: function (event, ui) {
+                $("#txtCustomerName").val(ui.item.CustomerName);
+                $("#txtAgentTaxCode").val(ui.item.CustomerTax);
+                $("#txtCustomerAddress").val(ui.item.CustomerAddress);
+
+                return false;
+            }
+        })
+        .autocomplete("instance")._renderItem = function (ul, item) {
+            return $("<li>")
+              .append("<a>" + item.CustomerName + "</a>")
+              .appendTo(ul);
+        };
+    });
+
+</script>
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-bold text-black">@ViewBag.Title</h3>
+            </div>
+            <div class="box-body">
+                @using (Html.BeginForm("AddInvoice", "Invoice", FormMethod.Post, new { autocomplete = "off" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+                    @Html.HiddenFor(x => x.AgentID, new { id = "hdAgentID" })
+                    <div class="box-body">
+                        <div class="form-group col-md-3">
+                            <label>Số hóa đơn</label>
+                            @Html.TextBoxFor(m => m.InvoiceNumber, new { @class = "form-control", id = "txtInvoiceNumber", autocomplete = "off", @readonly = "readonly" })
+                            @Html.ValidationMessageFor(m => m.InvoiceNumber)
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label>Chi nhánh</label>
+                            @if (AirlineInvoice.Utils.CommonFunction.CheckAgentUserPermission())
+                            {
+                                @Html.DropDownListFor(m => m.AgentBranchID, AirlineInvoice.Utils.DataComboSource.LoadBranchDictionary(), new { @class = "form-control", id = "txtBranch" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("drpBranch", AirlineInvoice.Utils.DataComboSource.LoadBranchDictionary(Model.AgentBranchID, true), new { @class = "form-control", id = "txtBranch", @disabled = "disabled" })
+                                @Html.HiddenFor(x => x.AgentBranchID);
+                            }
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Ngày hóa đơn</label>
+                            @Html.TextBoxFor(m => m.InvoiceDate, "dd/MM/yyyy", new { @class = "form-control", id = "txtInvoiceDate", autocomplete = "off" })
+                        </div>
+                        <div class="form-group col-md-12">
+                                <label>Tên khách hàng</label>
+                                <input class="form-control" id="Buyer" name="Buyer" type="text" value="">
+                            </div>
+                        <div class="form-group col-md-9">
+                            <label>Tên đơn vị</label>
+                            @Html.TextBoxFor(m => m.CustomerName, new { @class = "form-control", id = "txtCustomerName" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Mã số thuế</label>
+                            @Html.TextBoxFor(m => m.CustomerTax, new { @class = "form-control", id = "txtAgentTaxCode" })
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Địa chỉ</label>
+                            @Html.TextAreaFor(m => m.CustomerAddress, new { @class = "form-control", id = "txtCustomerAddress" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label>Loại hóa đơn</label>
+                            @Html.DropDownListFor(x => x.InvoiceType, AirlineInvoice.Utils.DataComboSource.InvoiceType(), new { @class = "form-control" })
+                        </div>
+                        <div class="form-group col-md-9"></div>
+                        <div class="box-footer">
+                            <div class="form-group">
+                                <div class="col-sm-4 col-sm-offset-2">
+                                    <a class="btn btn-white" href="@Url.Action("Index")">Hủy</a>
+                                    <input type="submit" value="Thêm mới" class="btn btn-primary" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

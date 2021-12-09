@@ -1,0 +1,60 @@
+﻿@model List<AirlineInvoice.Models.InvoiceDetail>
+@{
+    System.Collections.Hashtable ticketTypeMap = new System.Collections.Hashtable(){
+    {(int)AirlineInvoice.Utils.TicketType.Dometic, "Vé nội địa"},
+        {(int)AirlineInvoice.Utils.TicketType.Changed, "chuyển"},
+        {(int)AirlineInvoice.Utils.TicketType.Global, "Vé quốc tế"},
+        {(int)AirlineInvoice.Utils.TicketType.Return, "Vé trả"}
+    };
+}
+
+<table class="table table-bordered table-striped" id="tblTicket">
+    <thead>
+        <tr>
+            <th>Số vé</th>
+            <th>Loại vé</th>
+            <th>Ngày bán</th>
+            <th>VCR</th>
+            <th>Số hóa đơn</th>
+            <th>Mã đặt vé</th>
+            <th>Hành trình</th>
+            <th>Giá vé</th>
+			<th>VAT</th>
+			<th>Phí khác</th>
+			<th>Tổng tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.TicketNo</td>
+                <td>@ticketTypeMap[item.TicketType]</td>
+                <td>@string.Format("{0:dd/MM/yyyy}", item.SoldDate)</td>
+                <td>
+                    <a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceDetailID)')">
+                        <i class="fa fa-info-circle"></i></a>
+                </td>
+                <td>@item.InvoiceNumber</td>
+                <td>@item.PNRCode</td>
+                <td>@item.TripCode</td>
+                <td>@string.Format("{0:#,#}", item.TicketFare)</td>
+                <td>
+                    @string.Format("{0:#,#}", item.TicketVAT)
+                </td>
+                <td>@string.Format("{0:#,#}", item.TicketTax)</td>
+                <td>@string.Format("{0:#,#}", item.TicketPrice)</td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")

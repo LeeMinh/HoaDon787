@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Thêm nhiều vé từ file Excel";
+}
+
+@model System.Data.DataTable
+@using System.Data;
+<script type="text/javascript">
+
+
+</script>
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <h3 class="box-title">Thêm nhiều vé từ file Excel vào kho dữ liệu</h3>
+            </div>
+            <div class="box-body">
+                @using (Html.BeginForm("FormUpload", "Import", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary()
+
+                    <div class="form-group">
+                        <input type="file" id="dataFile" name="upload" />
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Upload" class="btn btn-default" />
+                    </div>
+                }
+
+                @if (TempData["Add"] != null)
+                {
+                    List<string> Add = new List<string>();
+                    Add = TempData["Add"] as List<string>;
+
+                    if (Add.Count() > 0)
+                    {
+                        <h4 class="box-title">Thêm thành công các số vé:</h4>
+                        foreach (var item in Add)
+                        {
+                            <p>@item</p>
+                        }
+                    }
+
+                }
+                @if (TempData["Exist"] != null)
+                {
+                    List<string> Exist = new List<string>();
+                    Exist = TempData["Exist"] as List<string>;
+
+                    if (Exist.Count() > 0)
+                    {
+                        <h4 class="box-title">Các số vé sau đã có trong hệ thống:</h4>
+                        foreach (var item in Exist)
+                        {
+                            <p>@item</p>
+                        }
+                    }
+
+
+                }
+            </div>
+        </div>
+    </div>
+</div>

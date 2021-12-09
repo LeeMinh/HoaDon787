@@ -1,0 +1,55 @@
+﻿@model List<AirlineInvoice.Models.AgentBranch>
+
+<table class="table table-bordered table-striped" id="tblBranch">
+    <thead>
+        <tr>
+            <th>Tên chi nhánh</th>
+            <th>Điện thoại</th>
+            <th>Mã số thuế</th>
+            <th title="Tài khoản ngân hàng">Tài khoản NH</th>
+            <th title="Tiền tố hóa đơn">Tiền tố HĐ</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+            <tr>
+                <td>@item.BranchName</td>
+                <td>@item.Tel</td>
+                <td>@item.Tax</td>
+                <td>
+                    @item.BankAcc
+                </td>
+               <td>@item.InvoicePrefix</td>
+                <td align="center">
+                    @Html.ActionLink(" ", "EditAgentBranch", new { id = AirlineInvoice.Utils.CommonFunction.Shrink(item.AgentBranchID) }, new { @class = "btnAction btnEdit" })
+                </td>
+                <td align="center"><a href="javascript:void(0);" onclick="confirmDelete('@AirlineInvoice.Utils.CommonFunction.Shrink(item.AgentBranchID)')" class = "btnAction btnDelete">&nbsp;</a> </td>
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")
+<link href="~/Content/litebox.css" rel="stylesheet" />
+<script src="~/Scripts/litebox.js"></script>
+<script type="text/javascript">
+    $('.litebox').liteBox({
+        revealSpeed: 400,
+        background: 'rgba(0,0,0,.8)',
+        overlayClose: true,
+        escKey: true,
+        navKey: false,
+        errorMessage: 'Error loading content.'
+    });
+</script>

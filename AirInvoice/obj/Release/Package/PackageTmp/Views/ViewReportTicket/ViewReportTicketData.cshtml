@@ -1,0 +1,75 @@
+﻿@model List<AirlineInvoice.Models.InvoiceDetail>
+
+<table class="table table-bordered table-striped" id="tblTicket">
+    <thead>
+        <tr>
+            <th>Số vé</th>
+            <th>Loại vé</th>
+            <th>Ngày bán</th>
+            <th>VCR</th>
+            <th>Số hóa đơn</th>
+            <th>Mã đặt vé</th>
+            <th>Hành trình</th>
+            <th>Giá vé</th>
+            <th>VAT</th>
+            <th>Phí khác</th>
+            <th>Tổng tiền</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TicketNo</td>
+                    @{
+                string ticketType = "";
+                switch (item.TicketType)
+                {
+                    case 1:
+                        ticketType = "Vé nội địa";
+                        break;
+                    case 2:
+                        ticketType = "Vé quốc tế";
+                        break;
+                    case 3:
+                        ticketType = "Vé đổi";
+                        break;
+                    case 4:
+                        ticketType = "Vé hoàn";
+                        break;
+                    default:
+                        ticketType = "";
+                        break;
+                }
+                    }
+                    <td>@ticketType</td>
+                    <td>@string.Format("{0:dd/MM/yyyy}", item.SoldDate)</td>
+                    <td>
+                        <a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(item.InvoiceDetailID)')">
+                            <i class="fa fa-info-circle"></i>
+                        </a>
+                    </td>
+
+                    <td>@item.InvoiceNumber</td>
+                    <td>@item.PNRCode</td>
+                    <td>@item.TripCode</td>
+                    <td>@string.Format("{0:#,#}", item.TicketFare)</td>
+                    <td>
+                        @string.Format("{0:#,#}", item.TicketVAT)
+                    </td>
+                    <td>@string.Format("{0:#,#}", item.TicketTax)</td>
+                    <td>@string.Format("{0:#,#}", item.TicketPrice)</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>
+@Html.Partial("_NavigatePaging")

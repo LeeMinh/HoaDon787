@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+@Html.DevExpress().DocumentViewer(settings =>
+{
+    settings.Name = "InvoiceViewer";
+    var formats = settings.ToolbarItems.First(x => x.ItemKind == ReportToolbarItemKind.SaveFormat) as ReportToolbarComboBox;
+    formats.Elements.Clear();
+    formats.Elements.AddRange(new ListElement[] {
+                    new ListElement { Value = "pdf", Text = "Pdf"},
+                    new ListElement { Value = "xls", Text = "Xls"},
+                    new ListElement { Value = "xlsx", Text = "Xlsx"},
+                });
+    settings.CallbackRouteValues = new
+    {
+        Controller = "Invoice",
+        Action = "NormalReportPartial",
+        InvoiceID = Request.Params["invoiceid"],
+        reportcopy = Request.Params["reportcopy"],
+        PrintAction = Request.Params["PrintAction"]
+    };
+    settings.ExportRouteValues = new
+    {
+        Controller = "Invoice",
+        Action = "PhieuCanXePartialExport",
+        InvoiceID = Request.Params["invoiceid"],
+        reportcopy = Request.Params["reportcopy"],
+        PrintAction = Request.Params["PrintAction"]
+    };
+    settings.Report = (XtraReport)Model;
+}).GetHtml()

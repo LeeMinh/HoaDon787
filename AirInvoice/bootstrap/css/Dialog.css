@@ -1,0 +1,214 @@
+﻿
+/*-------------Style Jquery  Dialog-------------*/
+#ElcomDialogContent {
+    min-height: 34px !important;
+    max-height: 800px !important;
+    padding: 4px 13px 0 13px;
+}
+
+#ElcomDialogMesage {
+    padding-left: 42px;
+}
+
+    #ElcomDialogMesage ul {
+        padding-left: 55px;
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+
+
+.dialogCustomStyle {
+    position: fixed!important;
+}
+
+    .dialogCustomStyle .ui-dialog {
+        border: 1px solid #BFD3EB !important; /*z-index: 2501 !important;*/
+        position: fixed !important;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -100px;
+    }
+
+    .dialogCustomStyle .ui-widget-header {
+        background: url("Images/Dialog/Dialog-background_Header.png") repeat-x scroll 0 0 transparent !important;
+        border: 1px solid #BFD3EB !important;
+        color: #192F86 !important;
+        padding: 2px 13px 2px 6px !important;
+    }
+
+        .dialogCustomStyle .ui-widget-header .ui-dialog-title {
+            background: url("Images/Dialog/logo.png") no-repeat scroll 0 1px transparent !important;
+            padding-left: 22px;
+        }
+
+    .dialogCustomStyle .ui-dialog-buttonpane {
+        border-top: 1px solid #BFD3EB !important;
+        padding-bottom: 0px !important;
+        padding-right: 4px !important;
+    }
+
+    .dialogCustomStyle .ui-dialog-buttonset .ui-button:hover {
+        background: url("Images/Dialog/button-2.png") repeat-x scroll 50% 50% transparent !important;
+        border: 1px solid #E5DAB0 !important;
+    }
+
+    .dialogCustomStyle .ui-dialog-buttonset .ui-button {
+        background: url("Images/Dialog/button-1.png") repeat-x scroll 50% 50% transparent !important;
+        border: 1px solid #CAD9FF !important;
+        height: 25px;
+        min-width: 70px;
+        padding-top: 1px;
+    }
+
+/*thuộc tính này add chung cho tất cả các dialog*/
+.ui-button-text {
+    width: auto !important;
+}
+
+.dialogCustomStyle .ui-button-text {
+    padding: 0 10px 0 27px !important;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+    background-color: transparent;
+    font-weight: normal;
+}
+
+.dialogCustomStyle .icon-close .ui-button-text {
+    background-image: url("Images/dialog/Close16.png");
+    background-position: 7px 0px;
+}
+
+.dialogCustomStyle .icon-agree .ui-button-text {
+    background-image: url("Images/dialog/submit16.png");
+    background-position: 7px -1px;
+}
+
+.dialogCustomStyle .icon-cancel .ui-button-text {
+    background-image: url("Images/dialog/Disabled16.png");
+    background-position: 7px 0px;
+}
+
+.dialogCustomStyle .icon-no .ui-button-text {
+    background-image: url("Images/Dialog/No.png");
+    background-position: 7px 0px;
+}
+
+/* icon cho dialog */
+.dialogCustomStyle .dialog-icon {
+    height: 32px !important;
+    margin-bottom: 0 !important;
+    width: 32px !important;
+    float: left;
+    margin: 2px 10px 20px 0;
+}
+
+.dialogCustomStyle .icon-information {
+    background: url("Images/Dialog/Info32.png") no-repeat scroll 0 0 transparent !important;
+}
+
+.dialogCustomStyle .icon-warning {
+    background: url("Images/Dialog/Warning32.png") no-repeat scroll 0 0 transparent !important;
+}
+
+.dialogCustomStyle .icon-error {
+    background: url("Images/Dialog/Error32.png") no-repeat scroll 0 0 transparent !important;
+}
+
+.dialogCustomStyle .icon-confirm {
+    background: url("Images/Dialog/Help32.png") no-repeat scroll 0 0 transparent !important;
+}
+
+.dialogCustomStyle .icon-none {
+    display: none;
+}
+
+.dialogCustomStyle .ui-widget-header .ui-icon {
+    background-image: url("Images/Dialog/Dialog-close.png") !important;
+    background-position: center center;
+}
+
+.dialogCustomStyle .ui-widget-header .ui-dialog-titlebar-close {
+    background-image: url("Images/Dialog/Dialog-close.png") !important;
+    background-position: center center;
+}
+
+.dialogCustomStyle .icon-agree .ui-button-text {
+    background-image: url("Images/dialog/submit16.png");
+    background-position: 7px -1px;
+}
+
+.dialogCustomStyle .icon-cancel .ui-button-text {
+    background-image: url("Images/dialog/Disabled16.png");
+    background-position: 7px 0px;
+}
+
+
+/* ----------- end style dialog -------------*/
+
+/* css popup common */
+#dialog-container {
+    width: 100%;
+    height: 1000%;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    display: none;
+}
+
+#dialog-box-main {
+    background: #eee;
+    position: fixed;
+    z-index: 5000;
+    display: none;
+}
+
+    #dialog-box-main .dialog-content-detail {
+        margin: 1px;
+        color: #696969;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 12px;
+    }
+
+#dialog-process {
+    width: 100%;
+    height: 1000%;
+    filter: alpha(opacity=50);
+    opacity: 0.9;
+    background: #000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    display: none;
+    background: url("Images/dialog/loading.gif") no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+.img-close {
+    background: url("../Content/image/close.png") no-repeat;
+    width: 21px;
+    height: 21px;
+    float: right;
+    margin-top: 3px;
+}
+
+.popup-title {
+    height: 30px;
+    vertical-align: middle;
+    color: #FFF;
+    font-size: 13px;
+    padding-left: 5px;
+    background-color: #3399CC;
+    padding-top: 3px;
+    font-weight: bold;
+}
+
+/*Bootstrap dialog*/
+
+.bootstrap-dialog .modal-header{border-top-left-radius:4px;border-top-right-radius:4px}.bootstrap-dialog .bootstrap-dialog-title{color:#fff;display:inline-block;font-size:16px}.bootstrap-dialog .bootstrap-dialog-message{font-size:14px}.bootstrap-dialog .bootstrap-dialog-button-icon{margin-right:3px}.bootstrap-dialog .bootstrap-dialog-close-button{font-size:20px;float:right;filter:alpha(opacity=90);-moz-opacity:.9;-khtml-opacity:.9;opacity:.9}.bootstrap-dialog .bootstrap-dialog-close-button:hover{cursor:pointer;filter:alpha(opacity=100);-moz-opacity:1;-khtml-opacity:1;opacity:1}.bootstrap-dialog.type-default .modal-header{background-color:#fff}.bootstrap-dialog.type-default .bootstrap-dialog-title{color:#333}.bootstrap-dialog.type-info .modal-header{background-color:#5bc0de}.bootstrap-dialog.type-primary .modal-header{background-color:#428bca}.bootstrap-dialog.type-success .modal-header{background-color:#5cb85c}.bootstrap-dialog.type-warning .modal-header{background-color:#f0ad4e}.bootstrap-dialog.type-danger .modal-header{background-color:#d9534f}.bootstrap-dialog.size-large .bootstrap-dialog-title{font-size:24px}.bootstrap-dialog.size-large .bootstrap-dialog-close-button{font-size:30px}.bootstrap-dialog.size-large .bootstrap-dialog-message{font-size:18px}.bootstrap-dialog .icon-spin{display:inline-block;-moz-animation:spin 2s infinite linear;-o-animation:spin 2s infinite linear;-webkit-animation:spin 2s infinite linear;animation:spin 2s infinite linear}@-moz-keyframes spin{0%{-moz-transform:rotate(0deg)}100%{-moz-transform:rotate(359deg)}}@-webkit-keyframes spin{0%{-webkit-transform:rotate(0deg)}100%{-webkit-transform:rotate(359deg)}}@-o-keyframes spin{0%{-o-transform:rotate(0deg)}100%{-o-transform:rotate(359deg)}}@-ms-keyframes spin{0%{-ms-transform:rotate(0deg)}100%{-ms-transform:rotate(359deg)}}@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(359deg)}}

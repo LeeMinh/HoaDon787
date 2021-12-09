@@ -1,0 +1,59 @@
+﻿@model AirlineInvoice.Models.TransactionModel
+<script type="text/javascript">
+    var TransactionServices = JSON.parse('@Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.TransactionServices))');
+    function confirmDeleteService(id) {
+        ShowConfirmButton("Bạn có muốn xóa phòng khỏi danh sách?", function () {
+            var url = '@Url.Action("DeleteTransactionRoom", new { id = "aaa" })';
+            window.location = url.replace("aaa", id);
+        });
+    }
+</script>
+<table class="table table-striped table-bordered table-hover" id="tblPq">
+    <thead>
+        <tr>
+            <th>Mã dịch vụ</th>
+            <th>Tên dịch vụ</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th>Thanh toán</th>
+            <th>Sửa</th>
+            <th>Xóa</th>
+        </tr>
+    </thead>
+    <tbody id="tblService">
+        @if (Model != null && Model.TransactionServices.Count > 0)
+        {
+            foreach (var item in Model.TransactionServices)
+            {
+            <tr id="service-@item.ServiceID">
+                <td>@item.ServiceCode</td>
+                <td>@item.ServiceName</td>
+                <td align="right">@string.Format("{0:#,#}", item.Price)</td>
+                <td align="right">@string.Format("{0:#,#}", item.Quantity)</td>
+                <td align="right">@string.Format("{0:#,#}", item.Amount)</td>
+                <td align="center">@Html.CheckBox("drpIsPayment_"+ item.ServiceID, item.IsPayment)</td>
+                <td align="center">
+                    @if(!item.IsPayment)
+                    {
+                    @Html.ActionLink(" ", "EditRoom", new {id=AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionServiceID)}, new {@class="btnAction btnEdit"})
+                    }
+                </td>
+                <td align="center">
+                    @if (!item.IsPayment)
+                    {
+                        <a href="javascript:void(0);" onclick="confirmDeleteService('@AirlineInvoice.Utils.CommonFunction.Shrink(item.TransactionServiceID)')" class = "btnAction btnDelete">&nbsp;</a> 
+                    }
+                </td>
+
+            </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">Không có dữ liệu</td>
+            </tr>
+        }
+    </tbody>
+</table>

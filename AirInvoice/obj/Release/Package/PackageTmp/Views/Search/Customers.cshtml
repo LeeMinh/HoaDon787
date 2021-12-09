@@ -1,0 +1,49 @@
+﻿<script type="text/javascript">
+    function CustomerSearch_gotoPage(currentPage) {
+        var pageSize = parseInt($("#drpPageSize").val());
+        if (isNaN(pageSize) || pageSize == 0) pageSize = 20;
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetCustomerData", "Search")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                currentPage: currentPage,
+                pageSize: pageSize,
+                searchText: $("#txtSearchCustomer").val()
+            }),
+            success: function (data) {
+                $("#squaresWaveG").hide();
+                $("#customer-data").html(data);
+            }
+        });
+    }
+
+    function txtSearchCustomer_Keypress(event) {
+        if (event.keyCode == 13) CustomerSearch_gotoPage(1);
+    }
+
+</script>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <h2 class="rs titlePage">DANH SÁCH KHÁCH HÀNG</h2>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <input type="text" class="form-control" placeholder="Tìm kiếm theo tên hoặc CMTND" id="txtSearchCustomer" onkeypress="txtSearchCustomer_Keypress(event);" />
+                                <a href="javascript:void(0);" onclick="CustomerSearch_gotoPage(1);" class="fa fa-search" style="position: absolute; top: 12px; right: 25px;"></a>
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div id="customer-data">
+                            @Html.Partial("CustomerData")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,172 @@
+﻿@model AirlineInvoice.Models.Agent
+@using AirlineInvoice.Models;
+@{
+    ViewBag.Title = "THÔNG TIN ĐẠI LÝ";
+    AgentElectronicBill InfoElecAgent = new AgentElectronicBill();
+    if (ViewBag.InfoElecAgent != null) { InfoElecAgent = ViewBag.InfoElecAgent; }
+}
+<div class="row">
+    <!-- left column -->
+    <div class="col-md-12">
+        <!-- general form elements -->
+        <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title text-bold text-black">Thông tin đại lý</h3>
+            </div>
+
+            @using (Html.BeginForm("Index", "GeneralInfo", FormMethod.Post, new { autocomplete = "off", enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(x => x.AgentID)
+                @Html.HiddenFor(x => x.AgentLogo)
+                if (ViewBag.Status != null)
+                {
+                    if (ViewBag.Status == 1)
+                    {
+                        <div id="dvOK" class="alert alert-success alert-dismissable">
+                            <h4>
+                                <i class="icon fa fa-info"></i>
+                                Cập nhật thành công
+                            </h4>
+                            Thông tin đại lý đã được lưu!
+                        </div>
+                    }
+                    else
+                    {
+                        <div id="dvNotOK" class="alert alert-fail alert-dismissable">
+                            <h4>
+                                <i class="icon fa fa-info"></i>
+                                Cập nhật thất bại
+                            </h4>
+                            Xin mời kiểm tra lại thông tin!
+                        </div>
+                    }
+                }
+                <div class="box-body">
+                    <div class="form-group col-md-6">
+                        <label>Tên đại lý</label>
+                        @Html.TextBoxFor(m => m.AgentName, new { @class = "form-control", id = "txtName", autocomplete = "off" })
+                        @Html.ValidationMessageFor(m => m.AgentName)
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Tên công ty</label>
+                        @Html.TextBoxFor(m => m.AgentCompanyName, new { @class = "form-control", id = "txtComName", autocomplete = "off" })
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label>Địa chỉ</label>
+                        @Html.TextAreaFor(m => m.AgentCompanyAddress, new { @class = "form-control", id = "txtAddress" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Mã số thuế</label>
+                        @Html.TextBoxFor(m => m.AgentTaxCode, new { @class = "form-control", id = "txtAgentTaxCode" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Tel</label>
+                        @Html.TextBoxFor(m => m.Tel, new { @class = "form-control", id = "txtTel" })
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Website</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", id = "txtEmail" })
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Hình ảnh cũ</label>
+                        @if (!string.IsNullOrEmpty(Model.AgentLogo))
+                        {
+                            <a href="@Url.Content(Model.AgentLogo)" data-lightbox="oldImage" data-title="@Model.AgentLogo">
+                                <img src="@Url.Content(Model.AgentLogo)" alt="Image service" width="250" />
+                            </a>
+                        }
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Tải ảnh mới</label>
+                        @Html.TextBox("txtUpload", null, new { @class = "form-control", id = "txtImage", type = "file" })
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <label>@Html.CheckBoxFor(m => m.IsActive, new { @class = "i-checks" }) Hoạt động</label>
+                        </div>
+                    </div>
+                </div>
+                <div id="divC1">
+                    <div class="box-header with-border">
+                        <h3 class="box-title text-bold text-blue">Thông tin Sabre Signin</h3>
+
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-4">
+                            <label for="agentcode">Sabre PCC Code</label>
+                            @Html.TextBoxFor(m => m.SuffixSabre, new { @class = "form-control", id = "txtSigninSabre" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="agentname">Sabre Signin </label>
+                            @Html.TextBoxFor(m => m.SigninSabre, new { @class = "form-control", id = "txtSuffixSabre" })
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="agentname">Sabre Passcode</label>
+                            @Html.PasswordFor(m => m.PasscodeSabre, new { @class = "form-control", id = "txtPasscodeSabre" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">Hardcopy printer address</label>
+                            @Html.TextBoxFor(m => m.HardcopyPrinterAddress, new { @class = "form-control", id = "txtHardcopyPrinterAddress" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">TKT print address</label>
+                            @Html.TextBoxFor(m => m.TicketPrinterAddress, new { @class = "form-control", id = "txtTicketPrinterAddress" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">TKT print routine</label>
+                            @Html.TextBoxFor(m => m.TicketPrintRoutine, new { @class = "form-control", id = "txtTicketPrintRoutine" })
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">Station number</label>
+                            @Html.TextBoxFor(m => m.StationNumber, new { @class = "form-control", id = "txtStationNumber" })
+                        </div>
+                    </div>
+
+                </div>
+                <div id="divC2">
+                    <div class="box-header with-border">
+                        <h3 class="box-title text-bold text-blue">Tài khoản hóa đơn điện tử VNPT</h3>
+
+                    </div>
+                    <div class="box-body">
+                        <div class="form-group col-md-4">
+                            <label for="agentname">serialCert</label>
+                            <input type="text" id="serialCert" name="serialCert" class="form-control" value="@InfoElecAgent.serialCert" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="agentname">Account</label>
+                            <input type="text" id="Account" name="Account" class="form-control" value="@InfoElecAgent.Account" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="agentname">ACpass </label>
+                            <input type="text" id="ACpass" name="ACpass" class="form-control" value="@InfoElecAgent.ACpass" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">username</label>
+                            <input type="text" id="username" name="username" class="form-control" value="@InfoElecAgent.username" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">password</label>
+                            <input type="text" id="password" name="password" class="form-control" value="@InfoElecAgent.password" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">Mẫu số</label>
+                            <input type="text" id="pattern" name="pattern" class="form-control" value="@InfoElecAgent.pattern" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="agentname">Ký hiệu</label>
+                            <input type="text" id="serial" name="serial" class="form-control" value="@InfoElecAgent.serial" placeholder="" />
+                        </div>
+                    </div>
+                    <input type="submit" value="Cập nhật" class="btn btn-primary" />
+
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>

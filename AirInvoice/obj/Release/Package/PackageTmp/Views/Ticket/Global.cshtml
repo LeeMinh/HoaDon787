@@ -1,0 +1,112 @@
+﻿@{
+    ViewBag.Title = "TÌM KIẾM VÉ QUỐC TẾ";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#txtFromDate').datetimepicker({
+            mask: true,
+            timepicker: false,
+            format: 'd/m/Y'
+        });
+        $('#txtFromDate').val('@DateTime.Today.AddDays(-DateTime.Today.Day + 1).ToString("dd/MM/yyyy")');
+        $('#txtToDate').datetimepicker({
+            mask: true,
+            timepicker: false,
+            format: 'd/m/Y'
+        });
+        $('#txtToDate').val('@DateTime.Now.ToString("dd/MM/yyyy")');
+    });
+    function gotoPage(currentPage) {
+        var pageSize = parseInt($("#drpPageSize").val());
+        if (isNaN(pageSize) || pageSize == 0) pageSize = 20;
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetTicketData")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                currentPage: currentPage,
+                pageSize: pageSize,
+                ticketNo: $("#txtSearchTicket").val(),
+                ticketType: parseInt('@((int)AirlineInvoice.Utils.TicketType.Global)'),
+                fromDate: $("#txtFromDate").val(),
+                toDate: $("#txtToDate").val(),
+                tripCode: $("#txtTripCode").val(),
+                invoiceNo: $("#txtInvoiceNo").val()
+            }),
+            success: function (data) {
+                $("#ticket-data").html(data);
+            },
+            complete: function () {
+                $("#squaresWaveG").hide();
+            }
+        });
+    }
+
+    function ShowVCR(detailID) {
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetVCR")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                InvoiceDetailID: detailID
+            }),
+            success: function (data) {
+                //if (data.updatesystem == 1) {
+                ShowWarning(data.result);
+                //}
+                //else {
+                //$("#lblVCR").val(data.result);
+                //    $("#vcr-display").show();
+                ////}
+            },
+            complete: function () {
+                $("#squaresWaveG").hide();
+            }
+        });
+    }
+</script>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-danger">
+            <div class="box-header">
+                <div class="form-group col-md-2">
+                    <label>Ngày bán từ</label>
+                    <input type="text" id="txtFromDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Đến ngày</label>
+                    <input type="text" id="txtToDate" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Số vé</label>
+                    <input type="text" id="txtSearchTicket" class="form-control" />
+                </div>
+                <div class="form-group col-md-2">
+                    <label>Số Hóa đơn</label>
+                    <input type="text" id="txtInvoiceNo" class="form-control" />
+                </div>
+                <div class="form-group col-md-3">
+                    <label>Hành trình</label>
+                    <input type="text" id="txtTripCode" class="form-control" />
+                </div>
+                <div class="form-group col-md-1">
+                    <label>Tìm</label>
+                    <button onclick="gotoPage(1)" class="btn btn-md btn-info"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+
+            <div class="box-body">
+                <div id="ticket-data">
+                    <!-- Table -->
+                    @Html.Partial("GlobalData")
+                </div>
+            </div>
+        </div>
+        <!-- /.box-body -->
+    </div>
+    <!-- /.box -->
+</div>

@@ -1,0 +1,101 @@
+﻿@model AirlineInvoice.Models.LogOnModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ĐĂNG NHẬP HỆ THỐNG</title>
+
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/dist/css/AdminLTE.min.css">
+    <!-- iCheck -->
+    <link rel="stylesheet" href="/plugins/iCheck/square/blue.css">
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#inputUser").focus();
+        });
+        function validateLogin() {
+            var isValid = true;
+            var strError = "";
+            if ($("#inputUser").val() == "") {
+                strError = "Tên đăng nhập không được bỏ trống.";
+                isValid = false;
+                $("#inputUser").focus();
+            }
+            else if ($("#inputPass").val() == "") {
+                strError = "Mật khẩu không được bỏ trống.";
+                isValid = false;
+                $("#inputPass").focus();
+            }
+            $("#lblError").text(strError);
+            if (!isValid) $("#lblError").show();
+            else $("#lblError").hide();
+            return isValid;
+        }
+    </script>
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="#"><b>MAYBAY</b>.NET</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <p class="login-box-msg">Đăng nhập vào Hệ thống</p>
+
+
+
+            @using (Html.BeginForm("Login", "SuperAdmin",
+            new { ReturnUrl = ViewBag.ReturnUrl },
+            FormMethod.Post, new { @class = "m-t", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                
+                <div class="form-group has-feedback">
+                    @Html.TextBoxFor(m => m.UserName, new { placeholder = "Tên đăng nhập", @class = "form-control", id = "inputUser" })
+                    @Html.ValidationMessageFor(m => m.UserName)
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", id = "inputPass", placeholder = "Mật khẩu" })
+                    @Html.ValidationMessageFor(m => m.Password)
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-xs-4">
+                      <button type="submit" class="btn btn-primary block full-width m-b" onclick="return validateLogin();">Đăng nhập</button>
+
+                    </div>
+                    <!-- /.col -->
+                </div>
+                
+            }
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+</body>
+
+</html>

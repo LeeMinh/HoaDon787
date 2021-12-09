@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "QUẢN LÝ ĐẠI LÝ";
+}
+<script type="text/javascript">
+    function confirmDelete(id) {
+        ShowConfirmButton("Bạn có muốn xóa khách sạn này không?", function () {
+            var url = '@Url.Action("DeleteAgent", new { id = "aaa" })';
+            window.location = url.replace("aaa", id);
+        });
+    }
+    function gotoPage(currentPage) {
+        var pageSize = parseInt($("#drpPageSize").val());
+        if (isNaN(pageSize) || pageSize == 0) pageSize = 20;
+        $("#squaresWaveG").show("slow");
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetAgentData")',
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({
+                currentPage: currentPage,
+                pageSize: pageSize
+            }),
+            success: function (data) {
+                $("#squaresWaveG").hide();
+                $("#agent-data").html(data);
+            }
+        });
+    }
+</script>
+<div class="wrapper wrapper-content animated fadeInRight">
+    <h2 class="rs titlePage">@ViewBag.Title</h2>
+    <div class="row">
+        <div class="col-md-12 col-lg-12 col-xs-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-content">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-xs-12 col-md-12">
+                                @Html.ActionLink("Thêm mới", "AddAgent", null, new { @class = "btn btn-primary" })
+                            </div>
+                        </div>
+                        <div class="hr-line-dashed"></div>
+                        <div id="agent-data">
+                            @Html.Partial("AgentData")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

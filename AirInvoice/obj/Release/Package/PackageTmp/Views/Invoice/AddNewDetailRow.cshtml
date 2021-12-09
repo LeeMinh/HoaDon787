@@ -1,0 +1,23 @@
+﻿@model AirlineInvoice.Models.InvoiceDetail
+@if (Model != null)
+{
+    <tr id="detail-@Model.InvoiceDetailID">
+        <td align="center"><a href="javascript:void(0);" onclick="confirmDelete('@Model.InvoiceDetailID')"><i class="fa fa-remove"></i></a></td>
+        <td>@Model.TicketNo</td>
+        <td align="center">@string.Format("{0:dd/MM/yyyy}", Model.SoldDate)</td>
+        <td>@Model.TripCode</td>
+        <td>@Model.PNRCode</td>
+        <td>
+            <a href="javascript:void(0);" onclick="ShowVCR('@AirlineInvoice.Utils.CommonFunction.Shrink(Model.InvoiceDetailID)')"><i class="fa fa-info-circle"></i></a>
+        </td>
+        <td align="right">@string.Format("{0:#,#}", Model.TicketFare)</td>
+        <td align="right">
+            @string.Format("{0:#,#}", Model.TicketVAT)
+        </td>
+        <td align="right">@string.Format("{0:#,#}", Model.TicketTax)</td>
+        <td align="right">
+            @string.Format("{0:#,#}", Model.AgentFee)
+        </td>
+        <td align="right">@string.Format("{0:#,#}", Model.TicketPrice)</td>
+    </tr>
+}

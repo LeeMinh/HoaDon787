@@ -1,0 +1,39 @@
+﻿@model AirlineInvoice.Models.UserInRoles
+@{
+    ViewBag.Title = "PHÂN QUYỀN";
+}
+<section class="section main pageDetail">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        <fieldset>
+            <legend>Phân quyền: <font color="red">@Request["userName"]</font></legend>
+            @if (Model != null && Model.Roles != null)
+            {
+                foreach (var item in Model.Roles)
+                {
+                    <ul style="list-style-type:none">
+                        <li>
+                            @Html.CheckBoxFor(m => m.Roles[item.Key])
+                            @Html.Label(AirlineInvoice.Utils.CommonFunction.RoleMapping[item.Key])
+                        </li>
+                    </ul>
+
+                }
+            }
+            <input type="submit" value="Cập nhật" class="btn btn-primary" />
+            <div class="row topView">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    @Html.ActionLink("Quay lại danh sách người dùng","ManagerAccount")
+                </div>
+            </div>
+            
+        </fieldset>
+    }
+</section>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+

@@ -1,0 +1,106 @@
+﻿@{
+    ViewBag.Title = "IN HÓA ĐƠN";
+}
+
+<script src="@Url.Content("~/Content/plugins/chartjs/Chart.js")"></script>
+<div class="box box-default">
+    <div class="box-header with-border">
+        <h3 class="box-title">Tỉ lệ vé</h3>
+
+        <div class="box-tools pull-right">
+            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                <i class="fa fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-md-6" style="text-align: center;">
+                <div class="chart-responsive">
+                    <canvas id="pieChart" height="155" width="205" style="width: 205px; height: 155px;"></canvas>
+                </div>
+                <!-- ./chart-responsive -->
+            </div>
+            <!-- /.col -->
+            <div class="col-md-6">
+                <ul class="chart-legend clearfix">
+                    <li style="padding-top: 10px;"><i class="fa fa-circle-o text-blue"></i> Vé nội địa : @ViewBag.Dometic</li>
+                    <li style="padding-top: 10px;"><i class="fa fa-circle-o text-green"></i> Vé quốc tế : @ViewBag.Global</li>
+                    <li style="padding-top: 10px;"><i class="fa fa-circle-o text-yellow"></i> Vé đổi : @ViewBag.Changed</li>
+                    <li style="padding-top: 10px;"><i class="fa fa-circle-o text-red"></i> Vé hoàn : @ViewBag.Return</li>
+                </ul>
+            </div>
+            <input type="hidden" id="Dometic" data-value="@ViewBag.Dometic" />
+            <input type="hidden" id="Global" data-value="@ViewBag.Global" />
+            <input type="hidden" id="Changed" data-value="@ViewBag.Changed" />
+            <input type="hidden" id="Return" data-value="@ViewBag.Return" />
+
+            <!-- /.col -->
+            <script>
+                var Dometic = $("#Dometic").data("value");
+                var Global = $("#Global").data("value");
+                var Changed = $("#Changed").data("value");
+                var Return = $("#Return").data("value");
+                var DoughNutChartData = [
+                {
+                    value: Dometic,
+                    color: "#3c8dbc"
+                },
+                {
+                    value: Global,
+                    color: "green"
+                },
+                {
+                    value: Changed,
+                    color: "yellow"
+                },
+                 {
+                     value: Return,
+                     color: "red"
+                 }
+                ]
+                var myDoughnut = new Chart(document.getElementById("pieChart").getContext("2d")).Doughnut(DoughNutChartData);
+            </script>
+            
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.box-body -->
+</div>
+
+
+@*<div class="box box-default">
+        <script>
+            var data = {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                    {
+                        label: "My Second dataset",
+                        fillColor: "rgba(151,187,205,0.2)",
+                        strokeColor: "rgba(151,187,205,1)",
+                        pointColor: "rgba(151,187,205,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(151,187,205,1)",
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    }
+                ]
+            };
+            var ctx = document.getElementById("myChart").getContext("2d");
+            var myNewChart = new Chart(ctx).PolarArea(data);
+            var myLine = new Chart(document.getElementById("myChart").getContext("2d")).Line(data);
+        </script>
+        <canvas id="myChart" width="400" height="400"></canvas>
+    </div>*@

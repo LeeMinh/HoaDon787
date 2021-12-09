@@ -1,0 +1,25 @@
+﻿@if (Request.IsAuthenticated)
+{
+    <div id="dropDownAdmin">
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="glyphicon glyphicon-user"></i>@AirlineInvoice.Utils.CommonFunction.GetUserFullName() <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu" style="min-width: 80px !important">
+                <li>@Html.ActionLink("Đổi mật khẩu", "UserChangePassword", "Account")</li>
+                <li class="divider"></li>
+                <li> @Html.ActionLink("Đăng xuất", "LogOff", "Account")</li>
+                @*@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", style="margin-left: 16px; width: 40px;" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Thoát</a></li>
+                    }*@
+                @*<li><a href="#">Đổi mật khẩu</a></li>
+                    <li class="divider"></li>*@
+                @*@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <li><a href="javascript:document.getElementById('logoutForm').submit()">Thoát</a></li>
+                    }*@
+            </ul>
+        </div>
+    </div>
+}
